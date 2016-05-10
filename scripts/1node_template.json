@@ -1,0 +1,13 @@
+ {
+  "blueprint" : "cubis1node_blueprint",
+  "host_groups" : [
+    {
+      "name" : "host_group_1",
+      "hosts" : [
+        {
+          "fqdn" : "ambari.cubis"
+        }
+      ]
+    }
+  ]
+ }

@@ -3,7 +3,7 @@ MAINTAINER pascal.de.poorter@cubis.be
 
 # We need wget to download the ambari repo
 RUN apt-get update && \
-    apt-get -y install wget sudo ssh
+    apt-get -y install wget sudo ssh ntp
 
 # Add the ambari repo to the repository list
 RUN cd /etc/apt/sources.list.d && \
@@ -18,7 +18,6 @@ RUN mkdir ~/.ssh && \
     cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys && \
     chmod 600 ~/.ssh/authorized_keys && \
     service ssh start
-
 
 # Run ambari setup with the default settings
 RUN ambari-server setup -s
