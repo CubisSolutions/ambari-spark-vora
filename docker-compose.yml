@@ -1,0 +1,32 @@
+version: "2"
+
+services:
+# Setup a Zookeeper cluster for HA
+  ambari:
+    image: ambari_master
+    container_name: ambari.cubis
+    privileged: true
+    hostname: ambari.cubis
+    expose: 
+      - 8080
+      - 50070
+    ports:
+      - 8080:8080
+      - 50070:50070
+    entrypoint: sleep 100000
+    networks:
+      - nw
+                  
+# Setup a bridge custom network for network referencing through name resolution
+# This is not supported by the default bridge
+networks:
+  nw:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
+      
+
+
+

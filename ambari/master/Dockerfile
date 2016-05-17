@@ -7,9 +7,17 @@ RUN cd /etc/apt/sources.list.d && \
     apt-key adv --recv-keys --keyserver keyserver.ubuntu.com B9733A7A07513CAD && \
     apt-get update && \
     apt-get install -y ambari-server
+    
+RUN adduser -ingroup users vora
 
 # Run ambari setup with the default settings
 RUN ambari-server setup -s
 
 # Also make it possible to run the agent on the master
-RUN apt-get install -y ambari-agent 
+RUN apt-get install -y ambari-agent
+
+# Copy startup script into the docker image
+COPY bootstrap.sh /root/bootstrap.sh
+
+# Copy the ambari blueprint creation/installation scripts
+COPY ./scripts/* /root/ 
