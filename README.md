@@ -8,7 +8,8 @@ Docker needs to be installed on in order to run the environment and can be found
 
 Building the docker images
 ```
-docker build -t ambari_master ./ambari/master>
+docker build -t base ./base
+docker build -t ambari_master ./ambari/master
 ```
 Running the docker image:
 ```
