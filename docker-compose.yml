@@ -1,22 +1,44 @@
 version: "2"
 
 services:
-# Setup a Zookeeper cluster for HA
-  ambari:
+# Setup ambari cluster
+  ambarim:
     image: ambari_master
-    container_name: ambari.cubis
+    container_name: ambarim.cubis
     privileged: true
-    hostname: ambari.cubis
-    expose: 
-      - 8080
-      - 50070
+    hostname: ambarim.cubis
     ports:
+      - 4040:4040
       - 8080:8080
+      - 8088:8088
+      - 8500:8500
+      - 18080:18080
       - 50070:50070
-    entrypoint: sleep 100000
+    entrypoint: /root/bootstrap.sh
     networks:
       - nw
-                  
+  ambaris:
+    image: ambari_agent
+    container_name: ambaris.cubis
+    hostname: ambaris.cubis
+    entrypoint: /root/bootstrap.sh
+    networks:
+      - nw
+  ambaria1:
+    image: ambari_agent
+    container_name: ambaria1.cubis
+    hostname: ambaria1.cubis
+    entrypoint: /root/bootstrap.sh
+    networks:
+      - nw
+  ambaria2:
+    image: ambari_agent
+    container_name: ambaria2.cubis
+    hostname: ambaria2.cubis
+    entrypoint: /root/bootstrap.sh
+    networks:
+      - nw
+      
 # Setup a bridge custom network for network referencing through name resolution
 # This is not supported by the default bridge
 networks:
@@ -26,7 +48,3 @@ networks:
       driver: default
       config:
         - subnet: 172.25.0.0/16
-      
-
-
-

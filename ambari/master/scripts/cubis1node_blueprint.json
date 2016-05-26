@@ -6,7 +6,7 @@
         "properties" : {
           "ambari_metrics_user" : "ams",
           "metrics_monitor_log_dir" : "/var/log/ambari-metrics-monitor",
-          "metrics_collector_heapsize" : "512",
+          "metrics_collector_heapsize" : "621",
           "metrics_collector_pid_dir" : "/var/run/ambari-metrics-collector",
           "metrics_collector_log_dir" : "/var/log/ambari-metrics-collector",
           "metrics_monitor_pid_dir" : "/var/run/ambari-metrics-monitor",
@@ -52,7 +52,14 @@
     },
     {
       "ams-hbase-site" : {
-        "properties_attributes" : { },
+        "properties_attributes" : {
+          "hbase.zookeeper.quorum" : {
+            "final" : "true"
+          },
+          "final" : {
+            "hbase.zookeeper.quorum" : "true"
+          }
+        },
         "properties" : {
           "phoenix.coprocessor.maxMetaDataCacheSize" : "20480000",
           "hfile.block.cache.size" : "0.3",
@@ -122,7 +129,12 @@
     {
       "ranger-hdfs-policymgr-ssl" : {
         "properties_attributes" : { },
-        "properties" : { }
+        "properties" : {
+          "xasecure.policymgr.clientssl.truststore" : "/usr/hdp/current/hadoop-client/conf/ranger-plugin-truststore.jks",
+          "xasecure.policymgr.clientssl.keystore" : "/usr/hdp/current/hadoop-client/conf/ranger-plugin-keystore.jks",
+          "xasecure.policymgr.clientssl.keystore.credential.file" : "jceks://file{{credential_file}}",
+          "xasecure.policymgr.clientssl.truststore.credential.file" : "jceks://file{{credential_file}}"
+        }
       }
     },
     {
@@ -153,7 +165,7 @@
           "timeline.metrics.cluster.aggregator.hourly.ttl" : "31536000",
           "timeline.metrics.host.aggregator.ttl" : "86400",
           "phoenix.spool.directory" : "/tmp",
-          "timeline.metrics.host.aggregate.splitpoints" : " ",
+          "timeline.metrics.host.aggregate.splitpoints" : "master.FileSystem.MetaHlogSplitTime_75th_percentile",
           "timeline.metrics.cluster.aggregator.minute.interval" : "300",
           "timeline.metrics.cluster.aggregator.minute.ttl" : "7776000",
           "timeline.metrics.host.aggregator.minute.interval" : "300",
@@ -187,7 +199,7 @@
       "mapred-site" : {
         "properties_attributes" : { },
         "properties" : {
-          "mapreduce.task.io.sort.mb" : "429",
+          "mapreduce.task.io.sort.mb" : "859",
           "mapreduce.map.speculative" : "false",
           "mapreduce.jobhistory.recovery.store.class" : "org.apache.hadoop.mapreduce.v2.hs.HistoryServerLeveldbStateStoreService",
           "mapreduce.cluster.administrators" : " hadoop",
@@ -196,10 +208,10 @@
           "mapreduce.shuffle.port" : "13562",
           "yarn.app.mapreduce.am.admin-command-opts" : "-Dhdp.version=${hdp.version}",
           "mapreduce.reduce.shuffle.fetch.retry.timeout-ms" : "30000",
-          "mapreduce.jobhistory.address" : "%HOSTGROUP::host_group_1%:10020",
+          "mapreduce.jobhistory.address" : "%HOSTGROUP::host_group_2%:10020",
           "mapreduce.map.sort.spill.percent" : "0.7",
           "mapreduce.job.emit-timeline-data" : "false",
-          "mapreduce.map.memory.mb" : "768",
+          "mapreduce.map.memory.mb" : "1536",
           "mapreduce.jobhistory.recovery.enable" : "true",
           "mapreduce.admin.reduce.child.java.opts" : "-server -XX:NewRatio=8 -Djava.net.preferIPv4Stack=true -Dhdp.version=${hdp.version}",
           "mapreduce.map.log.level" : "INFO",
@@ -208,7 +220,7 @@
           "mapreduce.admin.user.env" : "LD_LIBRARY_PATH=/usr/hdp/${hdp.version}/hadoop/lib/native:/usr/hdp/${hdp.version}/hadoop/lib/native/Linux-amd64-64",
           "mapreduce.am.max-attempts" : "2",
           "yarn.app.mapreduce.am.staging-dir" : "/user",
-          "mapreduce.reduce.memory.mb" : "1536",
+          "mapreduce.reduce.memory.mb" : "3072",
           "mapreduce.framework.name" : "yarn",
           "mapreduce.reduce.shuffle.merge.percent" : "0.66",
           "mapreduce.reduce.shuffle.parallelcopies" : "30",
@@ -216,31 +228,36 @@
           "mapreduce.admin.map.child.java.opts" : "-server -XX:NewRatio=8 -Djava.net.preferIPv4Stack=true -Dhdp.version=${hdp.version}",
           "mapreduce.job.reduce.slowstart.completedmaps" : "0.05",
           "mapreduce.jobhistory.done-dir" : "/mr-history/done",
-          "mapreduce.jobhistory.webapp.address" : "%HOSTGROUP::host_group_1%:19888",
+          "mapreduce.jobhistory.webapp.address" : "%HOSTGROUP::host_group_2%:19888",
           "mapreduce.application.framework.path" : "/hdp/apps/${hdp.version}/mapreduce/mapreduce.tar.gz#mr-framework",
           "mapreduce.application.classpath" : "$PWD/mr-framework/hadoop/share/hadoop/mapreduce/*:$PWD/mr-framework/hadoop/share/hadoop/mapreduce/lib/*:$PWD/mr-framework/hadoop/share/hadoop/common/*:$PWD/mr-framework/hadoop/share/hadoop/common/lib/*:$PWD/mr-framework/hadoop/share/hadoop/yarn/*:$PWD/mr-framework/hadoop/share/hadoop/yarn/lib/*:$PWD/mr-framework/hadoop/share/hadoop/hdfs/*:$PWD/mr-framework/hadoop/share/hadoop/hdfs/lib/*:$PWD/mr-framework/hadoop/share/hadoop/tools/lib/*:/usr/hdp/${hdp.version}/hadoop/lib/hadoop-lzo-0.6.0.${hdp.version}.jar:/etc/hadoop/conf/secure",
           "mapreduce.reduce.shuffle.fetch.retry.enabled" : "1",
           "mapreduce.task.io.sort.factor" : "100",
-          "mapreduce.reduce.java.opts" : "-Xmx1228m",
+          "mapreduce.reduce.java.opts" : "-Xmx2457m",
           "mapreduce.map.output.compress" : "false",
           "mapreduce.jobhistory.recovery.store.leveldb.path" : "/hadoop/mapreduce/jhs",
           "mapreduce.reduce.input.buffer.percent" : "0.0",
           "mapreduce.jobhistory.intermediate-done-dir" : "/mr-history/tmp",
           "yarn.app.mapreduce.am.log.level" : "INFO",
           "mapreduce.reduce.shuffle.fetch.retry.interval-ms" : "1000",
-          "yarn.app.mapreduce.am.command-opts" : "-Xmx614m -Dhdp.version=${hdp.version}",
-          "mapreduce.map.java.opts" : "-Xmx614m",
+          "yarn.app.mapreduce.am.command-opts" : "-Xmx1228m -Dhdp.version=${hdp.version}",
+          "mapreduce.map.java.opts" : "-Xmx1228m",
           "mapreduce.reduce.shuffle.input.buffer.percent" : "0.7",
           "mapreduce.reduce.speculative" : "false",
           "mapreduce.output.fileoutputformat.compress.type" : "BLOCK",
-          "yarn.app.mapreduce.am.resource.mb" : "768"
+          "yarn.app.mapreduce.am.resource.mb" : "1536"
         }
       }
     },
     {
       "ranger-yarn-policymgr-ssl" : {
         "properties_attributes" : { },
-        "properties" : { }
+        "properties" : {
+          "xasecure.policymgr.clientssl.truststore" : "/usr/hdp/current/hadoop-client/conf/ranger-yarn-plugin-truststore.jks",
+          "xasecure.policymgr.clientssl.keystore" : "/usr/hdp/current/hadoop-client/conf/ranger-yarn-plugin-keystore.jks",
+          "xasecure.policymgr.clientssl.keystore.credential.file" : "jceks://file{{credential_file}}",
+          "xasecure.policymgr.clientssl.truststore.credential.file" : "jceks://file{{credential_file}}"
+        }
       }
     },
     {
@@ -274,7 +291,14 @@
     {
       "ranger-yarn-security" : {
         "properties_attributes" : { },
-        "properties" : { }
+        "properties" : {
+          "ranger.plugin.yarn.policy.rest.ssl.config.file" : "/etc/hadoop/conf/ranger-policymgr-ssl-yarn.xml",
+          "ranger.plugin.yarn.policy.source.impl" : "org.apache.ranger.admin.client.RangerAdminRESTClient",
+          "ranger.plugin.yarn.policy.cache.dir" : "/etc/ranger/{{repo_name}}/policycache",
+          "ranger.plugin.yarn.policy.pollIntervalMs" : "30000",
+          "ranger.plugin.yarn.policy.rest.url" : "{{policymgr_mgr_url}}",
+          "ranger.plugin.yarn.service.name" : "{{repo_name}}"
+        }
       }
     },
     {
@@ -298,7 +322,23 @@
     {
       "ranger-yarn-audit" : {
         "properties_attributes" : { },
-        "properties" : { }
+        "properties" : {
+          "xasecure.audit.credential.provider.file" : "jceks://file{{credential_file}}",
+          "xasecure.audit.destination.hdfs.batch.filespool.dir" : "/var/log/hadoop/yarn/audit/hdfs/spool",
+          "xasecure.audit.is.enabled" : "true",
+          "xasecure.audit.destination.hdfs" : "true",
+          "xasecure.audit.destination.solr.batch.filespool.dir" : "/var/log/hadoop/yarn/audit/solr/spool",
+          "xasecure.audit.destination.hdfs.dir" : "hdfs://NAMENODE_HOSTNAME:8020/ranger/audit",
+          "xasecure.audit.destination.db.jdbc.url" : "{{audit_jdbc_url}}",
+          "xasecure.audit.destination.db.jdbc.driver" : "{{jdbc_driver}}",
+          "xasecure.audit.destination.db" : "false",
+          "xasecure.audit.destination.solr" : "false",
+          "xasecure.audit.destination.db.user" : "{{xa_audit_db_user}}",
+          "xasecure.audit.destination.solr.zookeepers" : "NONE",
+          "xasecure.audit.provider.summary.enabled" : "false",
+          "xasecure.audit.destination.db.batch.filespool.dir" : "/var/log/hadoop/yarn/audit/db/spool",
+          "xasecure.audit.destination.solr.urls" : ""
+        }
       }
     },
     {
@@ -313,10 +353,71 @@
       }
     },
     {
-      "core-site" : {
+      "tez-site" : {
         "properties_attributes" : { },
         "properties" : {
-          "fs.defaultFS" : "hdfs://%HOSTGROUP::host_group_1%:8020",
+          "tez.am.launch.cmd-opts" : "-XX:+PrintGCDetails -verbose:gc -XX:+PrintGCTimeStamps -XX:+UseNUMA -XX:+UseParallelGC",
+          "tez.runtime.sorter.class" : "PIPELINED",
+          "tez.counters.max.groups" : "1000",
+          "tez.task.resource.memory.mb" : "1536",
+          "tez.am.view-acls" : "*",
+          "tez.runtime.optimize.local.fetch" : "true",
+          "tez.runtime.pipelined.sorter.sort.threads" : "2",
+          "tez.shuffle-vertex-manager.min-src-fraction" : "0.2",
+          "tez.staging-dir" : "/tmp/${user.name}/staging",
+          "tez.session.am.dag.submit.timeout.secs" : "300",
+          "tez.am.container.reuse.locality.delay-allocation-millis" : "250",
+          "tez.runtime.compress" : "true",
+          "tez.session.client.timeout.secs" : "-1",
+          "tez.am.am-rm.heartbeat.interval-ms.max" : "250",
+          "tez.am.container.idle.release-timeout-min.millis" : "10000",
+          "tez.task.launch.cmd-opts" : "-XX:+PrintGCDetails -verbose:gc -XX:+PrintGCTimeStamps -XX:+UseNUMA -XX:+UseParallelGC",
+          "tez.am.launch.cluster-default.cmd-opts" : "-server -Djava.net.preferIPv4Stack=true -Dhdp.version=${hdp.version}",
+          "tez.am.maxtaskfailures.per.node" : "10",
+          "tez.lib.uris" : "/hdp/apps/${hdp.version}/tez/tez.tar.gz",
+          "tez.am.tez-ui.history-url.template" : "__HISTORY_URL_BASE__?viewPath=%2F%23%2Ftez-app%2F__APPLICATION_ID__",
+          "tez.counters.max" : "5000",
+          "tez.generate.debug.artifacts" : "false",
+          "tez.task.launch.env" : "LD_LIBRARY_PATH=/usr/hdp/${hdp.version}/hadoop/lib/native:/usr/hdp/${hdp.version}/hadoop/lib/native/Linux-amd64-64",
+          "tez.use.cluster.hadoop-libs" : "false",
+          "tez.runtime.convert.user-payload.to.history-text" : "false",
+          "tez.runtime.unordered.output.buffer.size-mb" : "115",
+          "tez.am.container.reuse.enabled" : "true",
+          "tez.grouping.split-waves" : "1.7",
+          "tez.shuffle-vertex-manager.max-src-fraction" : "0.4",
+          "tez.grouping.max-size" : "1073741824",
+          "tez.am.log.level" : "INFO",
+          "tez.task.am.heartbeat.counter.interval-ms.max" : "4000",
+          "tez.task.launch.cluster-default.cmd-opts" : "-server -Djava.net.preferIPv4Stack=true -Dhdp.version=${hdp.version}",
+          "tez.task.max-events-per-heartbeat" : "500",
+          "tez.history.logging.service.class" : "org.apache.tez.dag.history.logging.ats.ATSV15HistoryLoggingService",
+          "tez.am.container.idle.release-timeout-max.millis" : "20000",
+          "tez.am.resource.memory.mb" : "3072",
+          "tez.am.max.app.attempts" : "2",
+          "tez.cluster.additional.classpath.prefix" : "/usr/hdp/${hdp.version}/hadoop/lib/hadoop-lzo-0.6.0.${hdp.version}.jar:/etc/hadoop/conf/secure",
+          "tez.am.container.reuse.non-local-fallback.enabled" : "false",
+          "tez.am.container.reuse.rack-fallback.enabled" : "true",
+          "tez.task.get-task.sleep.interval-ms.max" : "200",
+          "tez.grouping.min-size" : "16777216",
+          "tez.runtime.io.sort.mb" : "614",
+          "tez.task.generate.counters.per.io" : "true",
+          "tez.am.launch.env" : "LD_LIBRARY_PATH=/usr/hdp/${hdp.version}/hadoop/lib/native:/usr/hdp/${hdp.version}/hadoop/lib/native/Linux-amd64-64",
+          "tez.runtime.compress.codec" : "org.apache.hadoop.io.compress.SnappyCodec"
+        }
+      }
+    },
+    {
+      "core-site" : {
+        "properties_attributes" : {
+          "fs.defaultFS" : {
+            "final" : "true"
+          },
+          "final" : {
+            "fs.defaultFS" : "true"
+          }
+        },
+        "properties" : {
+          "fs.defaultFS" : "hdfs://%HOSTGROUP::host_group_2%:8020",
           "ha.failover-controller.active-standby-elector.zk.op.retries" : "120",
           "hadoop.security.authentication" : "simple",
           "ipc.server.tcpnodelay" : "true",
@@ -348,9 +449,9 @@
           "regionserver_xmn_size" : "256",
           "hbase_log_dir" : "/var/log/ambari-metrics-collector",
           "hbase_regionserver_heapsize" : "512",
-          "hbase_master_heapsize" : "640",
+          "hbase_master_heapsize" : "512",
           "hbase_regionserver_xmn_ratio" : "0.2",
-          "hbase_master_xmn_size" : "192",
+          "hbase_master_xmn_size" : "128",
           "content" : "\n# Set environment variables here.\n\n# The java implementation to use. Java 1.6+ required.\nexport JAVA_HOME={{java64_home}}\n\n# HBase Configuration directory\nexport HBASE_CONF_DIR=${HBASE_CONF_DIR:-{{hbase_conf_dir}}}\n\n# Extra Java CLASSPATH elements. Optional.\nadditional_cp={{hbase_classpath_additional}}\nif [  -n \"$additional_cp\" ];\nthen\n  export HBASE_CLASSPATH=${HBASE_CLASSPATH}:$additional_cp\nelse\n  export HBASE_CLASSPATH=${HBASE_CLASSPATH}\nfi\n\n# The maximum amount of heap to use for hbase shell.\nexport HBASE_SHELL_OPTS=\"-Xmx256m\"\n\n# Extra Java runtime options.\n# Below are what we set by default. May only work with SUN JVM.\n# For more on why as well as other possible settings,\n# see http://wiki.apache.org/hadoop/PerformanceTuning\nexport HBASE_OPTS=\"-XX:+UseConcMarkSweepGC -XX:ErrorFile={{hbase_log_dir}}/hs_err_pid%p.log -Djava.io.tmpdir={{hbase_tmp_dir}}\"\nexport SERVER_GC_OPTS=\"-verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:{{hbase_log_dir}}/gc.log-`date +'%Y%m%d%H%M'`\"\n# Uncomment below to enable java garbage collection logging.\n# export HBASE_OPTS=\"$HBASE_OPTS -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:$HBASE_HOME/logs/gc-hbase.log\"\n\n# Uncomment and adjust to enable JMX exporting\n# See jmxremote.password and jmxremote.access in $JRE_HOME/lib/management to configure remote password access.\n# More details at: http://java.sun.com/javase/6/docs/technotes/guides/management/agent.html\n#\n# export HBASE_JMX_BASE=\"-Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false\"\n\n{% if java_version < 8 %}\nexport HBASE_MASTER_OPTS=\" -XX:PermSize=64m -XX:MaxPermSize={{hbase_master_maxperm_size}} -Xms{{hbase_heapsize}} -Xmx{{hbase_heapsize}} -Xmn{{hbase_master_xmn_size}} -XX:CMSInitiatingOccupancyFraction=70 -XX:+UseCMSInitiatingOccupancyOnly\"\nexport HBASE_REGIONSERVER_OPTS=\"-XX:MaxPermSize=128m -Xmn{{regionserver_xmn_size}} -XX:CMSInitiatingOccupancyFraction=70 -XX:+UseCMSInitiatingOccupancyOnly -Xms{{regionserver_heapsize}} -Xmx{{regionserver_heapsize}}\"\n{% else %}\nexport HBASE_MASTER_OPTS=\" -Xms{{hbase_heapsize}} -Xmx{{hbase_heapsize}} -Xmn{{hbase_master_xmn_size}} -XX:CMSInitiatingOccupancyFraction=70 -XX:+UseCMSInitiatingOccupancyOnly\"\nexport HBASE_REGIONSERVER_OPTS=\" -Xmn{{regionserver_xmn_size}} -XX:CMSInitiatingOccupancyFraction=70 -XX:+UseCMSInitiatingOccupancyOnly -Xms{{regionserver_heapsize}} -Xmx{{regionserver_heapsize}}\"\n{% endif %}\n\n\n# export HBASE_THRIFT_OPTS=\"$HBASE_JMX_BASE -Dcom.sun.management.jmxremote.port=10103\"\n# export HBASE_ZOOKEEPER_OPTS=\"$HBASE_JMX_BASE -Dcom.sun.management.jmxremote.port=10104\"\n\n# File naming hosts on which HRegionServers will run. $HBASE_HOME/conf/regionservers by default.\nexport HBASE_REGIONSERVERS=${HBASE_CONF_DIR}/regionservers\n\n# Extra ssh options. Empty by default.\n# export HBASE_SSH_OPTS=\"-o ConnectTimeout=1 -o SendEnv=HBASE_CONF_DIR\"\n\n# Where log files are stored. $HBASE_HOME/logs by default.\nexport HBASE_LOG_DIR={{hbase_log_dir}}\n\n# A string representing this instance of hbase. $USER by default.\n# export HBASE_IDENT_STRING=$USER\n\n# The scheduling priority for daemon processes. See 'man nice'.\n# export HBASE_NICENESS=10\n\n# The directory where pid files are stored. /tmp by default.\nexport HBASE_PID_DIR={{hbase_pid_dir}}\n\n# Seconds to sleep between slave commands. Unset by default. This\n# can be useful in large clusters, where, e.g., slave rsyncs can\n# otherwise arrive faster than the master can service them.\n# export HBASE_SLAVE_SLEEP=0.1\n\n# Tell HBase whether it should manage it's own instance of Zookeeper or not.\nexport HBASE_MANAGES_ZK=false\n\n{% if security_enabled %}\nexport HBASE_OPTS=\"$HBASE_OPTS -Djava.security.auth.login.config={{client_jaas_config_file}} -Dzookeeper.sasl.client.username={{zk_servicename}}\"\nexport HBASE_MASTER_OPTS=\"$HBASE_MASTER_OPTS -Djava.security.auth.login.config={{master_jaas_config_file}} -Dzookeeper.sasl.client.username={{zk_servicename}}\"\nexport HBASE_REGIONSERVER_OPTS=\"$HBASE_REGIONSERVER_OPTS -Djava.security.auth.login.config={{regionserver_jaas_config_file}} -Dzookeeper.sasl.client.username={{zk_servicename}}\"\nexport HBASE_ZOOKEEPER_OPTS=\"$HBASE_ZOOKEEPER_OPTS -Djava.security.auth.login.config={{ams_zookeeper_jaas_config_file}} -Dzookeeper.sasl.client.username={{zk_servicename}}\"\n{% endif %}\n\n# use embedded native libs\n_HADOOP_NATIVE_LIB=\"/usr/lib/ams-hbase/lib/hadoop-native/\"\nexport HBASE_OPTS=\"$HBASE_OPTS -Djava.library.path=${_HADOOP_NATIVE_LIB}\"\n\n# Unset HADOOP_HOME to avoid importing HADOOP installed cluster related configs like: /usr/hdp/2.2.0.0-2041/hadoop/conf/\nexport HADOOP_HOME={{ams_hbase_home_dir}}",
           "hbase_classpath_additional" : ""
         }
@@ -366,7 +467,34 @@
     },
     {
       "hdfs-site" : {
-        "properties_attributes" : { },
+        "properties_attributes" : {
+          "dfs.webhdfs.enabled" : {
+            "final" : "true"
+          },
+          "dfs.namenode.http-address" : {
+            "final" : "true"
+          },
+          "dfs.namenode.name.dir" : {
+            "final" : "true"
+          },
+          "dfs.support.append" : {
+            "final" : "true"
+          },
+          "dfs.datanode.failed.volumes.tolerated" : {
+            "final" : "true"
+          },
+          "final" : {
+            "dfs.webhdfs.enabled" : "true",
+            "dfs.namenode.http-address" : "true",
+            "dfs.support.append" : "true",
+            "dfs.namenode.name.dir" : "true",
+            "dfs.datanode.failed.volumes.tolerated" : "true",
+            "dfs.datanode.data.dir" : "true"
+          },
+          "dfs.datanode.data.dir" : {
+            "final" : "true"
+          }
+        },
         "properties" : {
           "dfs.replication" : "3",
           "dfs.namenode.audit.log.async" : "true",
@@ -375,8 +503,8 @@
           "dfs.namenode.avoid.read.stale.datanode" : "true",
           "dfs.journalnode.http-address" : "0.0.0.0:8480",
           "nfs.file.dump.dir" : "/tmp/.hdfs-nfs",
-          "dfs.namenode.rpc-address" : "%HOSTGROUP::host_group_1%:8020",
-          "dfs.namenode.https-address" : "%HOSTGROUP::host_group_1%:50470",
+          "dfs.namenode.rpc-address" : "%HOSTGROUP::host_group_2%:8020",
+          "dfs.namenode.https-address" : "%HOSTGROUP::host_group_2%:50470",
           "dfs.encrypt.data.transfer.cipher.suites" : "AES/CTR/NoPadding",
           "dfs.client.read.shortcircuit.streams.cache.size" : "4096",
           "dfs.hosts.exclude" : "/etc/hadoop/conf/dfs.exclude",
@@ -398,7 +526,7 @@
           "dfs.replication.max" : "50",
           "dfs.client.read.shortcircuit" : "true",
           "dfs.webhdfs.enabled" : "true",
-          "dfs.namenode.http-address" : "%HOSTGROUP::host_group_1%:50070",
+          "dfs.namenode.http-address" : "%HOSTGROUP::host_group_2%:50070",
           "dfs.namenode.name.dir" : "/hadoop/hdfs/namenode",
           "dfs.namenode.avoid.write.stale.datanode" : "true",
           "dfs.datanode.https.address" : "0.0.0.0:50475",
@@ -417,7 +545,7 @@
           "dfs.namenode.write.stale.datanode.ratio" : "1.0f",
           "dfs.namenode.name.dir.restore" : "true",
           "dfs.heartbeat.interval" : "3",
-          "dfs.namenode.secondary.http-address" : "%HOSTGROUP::host_group_1%:50090",
+          "dfs.namenode.secondary.http-address" : "%HOSTGROUP::host_group_2%:50090",
           "dfs.namenode.checkpoint.txns" : "1000000",
           "dfs.journalnode.edits.dir" : "/hadoop/hdfs/journalnode",
           "dfs.support.append" : "true",
@@ -429,10 +557,24 @@
       }
     },
     {
+      "vora-thriftserver-config" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "vora_thriftserver_extra_arguments" : "--conf vora.hadoop.distro=hdp",
+          "vora_thriftserver_service_registry" : "localhost:8500",
+          "vora_thriftserver_log_dir" : "/var/log/vora-thriftserver",
+          "vora_thriftserver_java_home" : "/usr/jdk64/jdk1.8.0_60",
+          "vora_thriftserver_metastore_dir" : "/tmp/vora-thriftserver",
+          "vora_thriftserver_spark_home" : "/usr/hdp/2.3.4.7-4/spark",
+          "vora_thriftserver_log_level" : "WARNING"
+        }
+      }
+    },
+    {
       "yarn-site" : {
         "properties_attributes" : { },
         "properties" : {
-          "yarn.resourcemanager.zk-address" : "%HOSTGROUP::host_group_1%:2181",
+          "yarn.resourcemanager.zk-address" : "%HOSTGROUP::host_group_1%:2181,%HOSTGROUP::host_group_2%:2181",
           "yarn.nodemanager.container-monitor.interval-ms" : "3000",
           "yarn.timeline-service.entity-group-fs-store.active-dir" : "/ats/active/",
           "yarn.nodemanager.linux-container-executor.group" : "hadoop",
@@ -441,10 +583,10 @@
           "yarn.timeline-service.entity-group-fs-store.cleaner-interval-seconds" : "3600",
           "yarn.nodemanager.remote-app-log-dir-suffix" : "logs",
           "yarn.nodemanager.address" : "0.0.0.0:45454",
-          "yarn.resourcemanager.webapp.address" : "%HOSTGROUP::host_group_1%:8088",
+          "yarn.resourcemanager.webapp.address" : "%HOSTGROUP::host_group_2%:8088",
           "yarn.timeline-service.leveldb-timeline-store.ttl-interval-ms" : "300000",
           "yarn.scheduler.maximum-allocation-vcores" : "1",
-          "yarn.timeline-service.address" : "%HOSTGROUP::host_group_1%:10200",
+          "yarn.timeline-service.address" : "%HOSTGROUP::host_group_2%:10200",
           "yarn.timeline-service.enabled" : "true",
           "yarn.nodemanager.aux-services" : "mapreduce_shuffle",
           "yarn.nodemanager.resource.cpu-vcores" : "1",
@@ -456,16 +598,16 @@
           "yarn.timeline-service.http-authentication.simple.anonymous.allowed" : "true",
           "yarn.resourcemanager.zk-state-store.parent-path" : "/rmstore",
           "yarn.timeline-service.leveldb-timeline-store.start-time-read-cache-size" : "10000",
-          "yarn.resourcemanager.admin.address" : "%HOSTGROUP::host_group_1%:8141",
+          "yarn.resourcemanager.admin.address" : "%HOSTGROUP::host_group_2%:8141",
           "yarn.nodemanager.linux-container-executor.cgroups.strict-resource-usage" : "false",
-          "yarn.resourcemanager.resource-tracker.address" : "%HOSTGROUP::host_group_1%:8025",
+          "yarn.resourcemanager.resource-tracker.address" : "%HOSTGROUP::host_group_2%:8025",
           "yarn.nodemanager.delete.debug-delay-sec" : "0",
           "yarn.resourcemanager.fs.state-store.retry-policy-spec" : "2000, 500",
           "yarn.timeline-service.http-authentication.type" : "simple",
           "yarn.timeline-service.ttl-enable" : "true",
           "yarn.timeline-service.entity-group-fs-store.retain-seconds" : "604800",
           "yarn.log-aggregation.retain-seconds" : "2592000",
-          "yarn.nodemanager.resource.memory-mb" : "3072",
+          "yarn.nodemanager.resource.memory-mb" : "6144",
           "yarn.nodemanager.disk-health-checker.min-healthy-disks" : "0.25",
           "yarn.node-labels.enabled" : "false",
           "yarn.nodemanager.log.retain-second" : "604800",
@@ -482,13 +624,13 @@
           "yarn.resourcemanager.fs.state-store.uri" : " ",
           "yarn.nodemanager.linux-container-executor.cgroups.hierarchy" : "hadoop-yarn",
           "yarn.resourcemanager.recovery.enabled" : "true",
-          "yarn.resourcemanager.scheduler.address" : "%HOSTGROUP::host_group_1%:8030",
+          "yarn.resourcemanager.scheduler.address" : "%HOSTGROUP::host_group_2%:8030",
           "yarn.timeline-service.leveldb-timeline-store.start-time-write-cache-size" : "10000",
           "yarn.timeline-service.ttl-ms" : "2678400000",
           "yarn.nodemanager.health-checker.script.timeout-ms" : "60000",
-          "yarn.log.server.url" : "http://%HOSTGROUP::host_group_1%:19888/jobhistory/logs",
+          "yarn.log.server.url" : "http://%HOSTGROUP::host_group_2%:19888/jobhistory/logs",
           "yarn.timeline-service.entity-group-fs-store.group-id-plugin-classes" : "",
-          "yarn.resourcemanager.address" : "%HOSTGROUP::host_group_1%:8050",
+          "yarn.resourcemanager.address" : "%HOSTGROUP::host_group_2%:8050",
           "yarn.timeline-service.recovery.enabled" : "true",
           "yarn.nodemanager.recovery.dir" : "{{yarn_log_dir_prefix}}/nodemanager/recovery-state",
           "yarn.resourcemanager.scheduler.monitor.enable" : "false",
@@ -519,26 +661,26 @@
           "yarn.timeline-service.leveldb-state-store.path" : "/hadoop/yarn/timeline",
           "yarn.timeline-service.entity-group-fs-store.done-dir" : "/ats/done/",
           "yarn.nodemanager.disk-health-checker.max-disk-utilization-per-disk-percentage" : "90",
-          "hadoop.registry.zk.quorum" : "%HOSTGROUP::host_group_1%:2181",
+          "hadoop.registry.zk.quorum" : "%HOSTGROUP::host_group_1%:2181,%HOSTGROUP::host_group_2%:2181",
           "yarn.nodemanager.log-aggregation.roll-monitoring-interval-seconds" : "-1",
           "yarn.nodemanager.container-executor.class" : "org.apache.hadoop.yarn.server.nodemanager.DefaultContainerExecutor",
           "yarn.resourcemanager.nodes.exclude-path" : "/etc/hadoop/conf/yarn.exclude",
           "yarn.timeline-service.state-store-class" : "org.apache.hadoop.yarn.server.timeline.recovery.LeveldbTimelineStateStore",
           "yarn.nodemanager.bind-host" : "0.0.0.0",
-          "yarn.resourcemanager.hostname" : "%HOSTGROUP::host_group_1%",
+          "yarn.resourcemanager.hostname" : "%HOSTGROUP::host_group_2%",
           "yarn.resourcemanager.connect.retry-interval.ms" : "30000",
-          "yarn.timeline-service.webapp.address" : "%HOSTGROUP::host_group_1%:8188",
-          "yarn.scheduler.minimum-allocation-mb" : "768",
+          "yarn.timeline-service.webapp.address" : "%HOSTGROUP::host_group_2%:8188",
+          "yarn.scheduler.minimum-allocation-mb" : "1536",
           "yarn.timeline-service.entity-group-fs-store.summary-store" : "org.apache.hadoop.yarn.server.timeline.RollingLevelDBTimelineStore",
           "yarn.nodemanager.health-checker.interval-ms" : "135000",
           "yarn.nodemanager.disk-health-checker.min-free-space-per-disk-mb" : "1000",
           "yarn.resourcemanager.zk-retry-interval-ms" : "1000",
           "yarn.nodemanager.remote-app-log-dir" : "/app-logs",
-          "yarn.scheduler.maximum-allocation-mb" : "3072",
+          "yarn.scheduler.maximum-allocation-mb" : "6144",
           "yarn.nodemanager.vmem-check-enabled" : "false",
           "yarn.timeline-service.entity-group-fs-store.scan-interval-seconds" : "60",
-          "yarn.resourcemanager.webapp.https.address" : "%HOSTGROUP::host_group_1%:8090",
-          "yarn.timeline-service.webapp.https.address" : "%HOSTGROUP::host_group_1%:8190",
+          "yarn.resourcemanager.webapp.https.address" : "%HOSTGROUP::host_group_2%:8090",
+          "yarn.timeline-service.webapp.https.address" : "%HOSTGROUP::host_group_2%:8190",
           "yarn.nodemanager.resource.percentage-physical-cpu-limit" : "80",
           "yarn.nodemanager.vmem-pmem-ratio" : "2.1",
           "yarn.nodemanager.log-aggregation.compression-type" : "gz",
@@ -568,6 +710,19 @@
       }
     },
     {
+      "vora-tools-config" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "vora_tools_log_dir" : "/var/log/vora-tools",
+          "vora_tools_max_trace_file_size" : "10485760",
+          "vora_tools_log_level" : "WARNING",
+          "vora_tools_max_num_trace_files" : "10",
+          "vora_tools_config_file" : "/etc/vora/datatools/default.json",
+          "vora_tools_service_registry" : "localhost:8500"
+        }
+      }
+    },
+    {
       "ams-hbase-policy" : {
         "properties_attributes" : { },
         "properties" : {
@@ -578,9 +733,30 @@
       }
     },
     {
+      "vora-v2server-config" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "vora_v2server_disable_auto_string_compression" : "false",
+          "vora_v2server_service_registry" : "localhost:8500",
+          "vora_v2server_max_trace_file_size" : "10485760",
+          "vora_v2server_max_num_trace_files" : "10",
+          "vora_v2server_log_dir" : "/var/log/vora-v2server",
+          "vora_v2server_log_level" : "WARNING"
+        }
+      }
+    },
+    {
       "ranger-hdfs-security" : {
         "properties_attributes" : { },
-        "properties" : { }
+        "properties" : {
+          "xasecure.add-hadoop-authorization" : "true",
+          "ranger.plugin.hdfs.policy.rest.ssl.config.file" : "/etc/hadoop/conf/ranger-policymgr-ssl.xml",
+          "ranger.plugin.hdfs.policy.source.impl" : "org.apache.ranger.admin.client.RangerAdminRESTClient",
+          "ranger.plugin.hdfs.policy.cache.dir" : "/etc/ranger/{{repo_name}}/policycache",
+          "ranger.plugin.hdfs.policy.pollIntervalMs" : "30000",
+          "ranger.plugin.hdfs.service.name" : "{{repo_name}}",
+          "ranger.plugin.hdfs.policy.rest.url" : "{{policymgr_mgr_url}}"
+        }
       }
     },
     {
@@ -595,6 +771,15 @@
           "spark.yarn.containerLauncherMaxThreads" : "25",
           "spark.yarn.queue" : "default",
           "spark.yarn.submit.file.replication" : "3"
+        }
+      }
+    },
+    {
+      "tez-env" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "content" : "\n# Tez specific configuration\nexport TEZ_CONF_DIR={{config_dir}}\n\n# Set HADOOP_HOME to point to a specific hadoop install directory\nexport HADOOP_HOME=${HADOOP_HOME:-{{hadoop_home}}}\n\n# The java implementation to use.\nexport JAVA_HOME={{java64_home}}\n    ",
+          "tez_user" : "tez"
         }
       }
     },
@@ -626,7 +811,13 @@
     {
       "ranger-yarn-plugin-properties" : {
         "properties_attributes" : { },
-        "properties" : { }
+        "properties" : {
+          "ranger-yarn-plugin-enabled" : "No",
+          "REPOSITORY_CONFIG_USERNAME" : "yarn",
+          "common.name.for.certificate" : "",
+          "hadoop.rpc.protection" : "",
+          "policy_user" : "ambari-qa"
+        }
       }
     },
     {
@@ -677,13 +868,49 @@
     {
       "ranger-hdfs-audit" : {
         "properties_attributes" : { },
-        "properties" : { }
+        "properties" : {
+          "xasecure.audit.credential.provider.file" : "jceks://file{{credential_file}}",
+          "xasecure.audit.destination.hdfs.batch.filespool.dir" : "/var/log/hadoop/hdfs/audit/hdfs/spool",
+          "xasecure.audit.is.enabled" : "true",
+          "xasecure.audit.destination.hdfs" : "true",
+          "xasecure.audit.destination.solr.batch.filespool.dir" : "/var/log/hadoop/hdfs/audit/solr/spool",
+          "xasecure.audit.destination.hdfs.dir" : "hdfs://NAMENODE_HOSTNAME:8020/ranger/audit",
+          "xasecure.audit.destination.db.jdbc.url" : "{{audit_jdbc_url}}",
+          "xasecure.audit.destination.db.jdbc.driver" : "{{jdbc_driver}}",
+          "xasecure.audit.destination.db" : "false",
+          "xasecure.audit.destination.solr" : "false",
+          "xasecure.audit.destination.db.user" : "{{xa_audit_db_user}}",
+          "xasecure.audit.destination.solr.zookeepers" : "NONE",
+          "xasecure.audit.provider.summary.enabled" : "false",
+          "xasecure.audit.destination.db.batch.filespool.dir" : "/var/log/hadoop/hdfs/audit/db/spool",
+          "xasecure.audit.destination.solr.urls" : ""
+        }
       }
     },
     {
       "ranger-hdfs-plugin-properties" : {
         "properties_attributes" : { },
-        "properties" : { }
+        "properties" : {
+          "REPOSITORY_CONFIG_USERNAME" : "hadoop",
+          "ranger-hdfs-plugin-enabled" : "No",
+          "common.name.for.certificate" : "",
+          "hadoop.rpc.protection" : "",
+          "policy_user" : "ambari-qa"
+        }
+      }
+    },
+    {
+      "vora-catalog-config" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "vora_catalog_max_num_trace_files" : "10",
+          "vora_catalog_log_level" : "WARNING",
+          "vora_catalog_service_registry" : "localhost:8500",
+          "vora_catalog_log_dir" : "/var/log/vora-catalog",
+          "vora_catalog_max_trace_file_size" : "10485760",
+          "vora_catalog_bind_interface" : "eth0",
+          "vora_catalog_dlog_replication_factor" : "1"
+        }
       }
     },
     {
@@ -726,12 +953,44 @@
           "user_group" : "hadoop",
           "override_uid" : "true",
           "security_enabled" : "false",
+          "repo_suse_rhel_template" : "[{{repo_id}}]\nname={{repo_id}}\n{% if mirror_list %}mirrorlist={{mirror_list}}{% else %}baseurl={{base_url}}{% endif %}\n\npath=/\nenabled=1\ngpgcheck=0",
+          "command_retry_enabled" : "true",
           "smokeuser" : "ambari-qa",
           "smokeuser_keytab" : "/etc/security/keytabs/smokeuser.headless.keytab",
+          "commands_to_retry" : "INSTALL,START",
           "repo_ubuntu_template" : "{{package_type}} {{base_url}} {{components}}",
-          "repo_suse_rhel_template" : "[{{repo_id}}]\nname={{repo_id}}\n{% if mirror_list %}mirrorlist={{mirror_list}}{% else %}baseurl={{base_url}}{% endif %}\n\npath=/\nenabled=1\ngpgcheck=0",
+          "command_retry_max_time_in_sec" : "600",
           "kerberos_domain" : "EXAMPLE.COM",
           "ignore_groupsusers_create" : "false"
+        }
+      }
+    },
+    {
+      "vora-discovery-config" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "vora_discovery_bootstrap_timeout" : "30",
+          "vora_discovery_servers" : "ambaris.cubis,ambaria1.cubis,ambaria2.cubis",
+          "vora_discovery_data_dir" : "/var/local/vora-discovery",
+          "vora_discovery_bind_interface" : "eth0",
+          "vora_discovery_log_dir" : "/var/log/vora-discovery",
+          "vora_discovery_log_level" : "WARNING",
+          "vora_discovery_bootstrap_host" : "ambaris.cubis"
+        }
+      }
+    },
+    {
+      "vora-dlog-config" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "vora_dlog_bind_interface" : "eth0",
+          "vora_dlog_max_trace_file_size" : "10485760",
+          "vora_dlog_store_dir" : "/var/local/vora-dlog",
+          "vora_dlog_port" : "49152",
+          "vora_dlog_log_dir" : "/var/log/vora-dlog",
+          "vora_dlog_log_level" : "WARNING",
+          "vora_dlog_max_num_trace_files" : "10",
+          "vora_dlog_service_registry" : "localhost:8500"
         }
       }
     },
@@ -774,9 +1033,6 @@
     {
       "components" : [
         {
-          "name" : "NODEMANAGER"
-        },
-        {
           "name" : "SPARK_CLIENT"
         },
         {
@@ -792,10 +1048,25 @@
           "name" : "METRICS_MONITOR"
         },
         {
+          "name" : "HANA_VORA_BASE_CLIENT"
+        },
+        {
+          "name" : "HANA_VORA_THRIFTSERVER_MASTER"
+        },
+        {
           "name" : "NAMENODE"
         },
         {
+          "name" : "TEZ_CLIENT"
+        },
+        {
           "name" : "ZOOKEEPER_CLIENT"
+        },
+        {
+          "name" : "HANA_VORA_DISCOVERY_CLIENT"
+        },
+        {
+          "name" : "HANA_VORA_CATALOG_SERVER"
         },
         {
           "name" : "SECONDARY_NAMENODE"
@@ -810,7 +1081,7 @@
           "name" : "AMBARI_SERVER"
         },
         {
-          "name" : "DATANODE"
+          "name" : "HANA_VORA_TOOLS_MASTER"
         },
         {
           "name" : "SPARK_JOBHISTORYSERVER"
@@ -819,19 +1090,93 @@
           "name" : "APP_TIMELINE_SERVER"
         },
         {
-          "name" : "METRICS_COLLECTOR"
-        },
-        {
           "name" : "RESOURCEMANAGER"
         }
       ],
       "configurations" : [ ],
+      "name" : "host_group_2",
+      "cardinality" : "1"
+    },
+    {
+      "components" : [
+        {
+          "name" : "NODEMANAGER"
+        },
+        {
+          "name" : "HANA_VORA_DLOG_SERVER"
+        },
+        {
+          "name" : "MAPREDUCE2_CLIENT"
+        },
+        {
+          "name" : "YARN_CLIENT"
+        },
+        {
+          "name" : "HDFS_CLIENT"
+        },
+        {
+          "name" : "ZOOKEEPER_SERVER"
+        },
+        {
+          "name" : "DATANODE"
+        },
+        {
+          "name" : "METRICS_MONITOR"
+        },
+        {
+          "name" : "HANA_VORA_BASE_CLIENT"
+        },
+        {
+          "name" : "HANA_VORA_DISCOVERY_SERVER"
+        },
+        {
+          "name" : "HANA_VORA_V2SERVER_WORKER"
+        }
+      ],
+      "configurations" : [ ],
       "name" : "host_group_1",
+      "cardinality" : "2"
+    },
+    {
+      "components" : [
+        {
+          "name" : "NODEMANAGER"
+        },
+        {
+          "name" : "HANA_VORA_DLOG_SERVER"
+        },
+        {
+          "name" : "MAPREDUCE2_CLIENT"
+        },
+        {
+          "name" : "YARN_CLIENT"
+        },
+        {
+          "name" : "HDFS_CLIENT"
+        },
+        {
+          "name" : "DATANODE"
+        },
+        {
+          "name" : "METRICS_MONITOR"
+        },
+        {
+          "name" : "HANA_VORA_BASE_CLIENT"
+        },
+        {
+          "name" : "HANA_VORA_DISCOVERY_SERVER"
+        },
+        {
+          "name" : "METRICS_COLLECTOR"
+        }
+      ],
+      "configurations" : [ ],
+      "name" : "host_group_3",
       "cardinality" : "1"
     }
   ],
   "Blueprints" : {
-    "blueprint_name" : "cubis1node_blueprint",
+    "blueprint_name" : "cubis1node_blueprint",   
     "stack_name" : "HDP",
     "stack_version" : "2.3"
   }
