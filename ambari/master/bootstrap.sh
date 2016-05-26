@@ -43,4 +43,6 @@ printf '\n'
 su hdfs -c "hadoop fs -mkdir /user/vora"
 su hdfs -c "hadoop fs -chown vora /user/vora"
 
-#sleep 100000
+while true ; do
+   sleep 100000
+done
