@@ -1,13 +1,25 @@
- {
+{
   "blueprint" : "cubis1node_blueprint",
   "host_groups" : [
     {
       "name" : "host_group_1",
+      "host_count" : 2 
+    },
+    {
+      "name" : "host_group_2",
       "hosts" : [
         {
-          "fqdn" : "ambari.cubis"
+          "fqdn" : "ambarim.cubis"
         }
       ]
-    }
+    },
+    {
+      "name" : "host_group_3",
+      "hosts" : [
+        {
+          "fqdn" : "ambaris.cubis"
+        }
+      ]
+    }    
   ]
  }

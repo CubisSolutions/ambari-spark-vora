@@ -7,3 +7,9 @@ RUN cd /etc/apt/sources.list.d && \
     apt-key adv --recv-keys --keyserver keyserver.ubuntu.com B9733A7A07513CAD && \
     apt-get update && \
     apt-get install -y ambari-agent
+    
+# Copy startup script into the docker image
+COPY bootstrap.sh /root/bootstrap.sh
+RUN chmod +x /root/bootstrap.sh
+
+EXPOSE 2181 4040 8020 8042 8080 8088 8300 8500 9099 9225 18080 49155 50070
