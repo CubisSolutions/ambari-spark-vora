@@ -590,6 +590,7 @@
           "yarn.timeline-service.enabled" : "true",
           "yarn.nodemanager.aux-services" : "mapreduce_shuffle",
           "yarn.nodemanager.resource.cpu-vcores" : "1",
+          "hdp.version" : "2.3.4.7-4",
           "yarn.resourcemanager.webapp.delegation-token-auth-filter.enabled" : "false",
           "yarn.nodemanager.log-aggregation.debug-enabled" : "false",
           "yarn.resourcemanager.zk-acl" : "world:anyone:rwcda",

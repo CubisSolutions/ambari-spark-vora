@@ -12,9 +12,11 @@ services:
       - 8080:8080
       - 8088:8088
       - 8500:8500
+      - 9099:9099
+      - 9225:9225
       - 18080:18080
       - 50070:50070
-    entrypoint: /root/bootstrap.sh
+    entrypoint: /bin/bash -c /root/bootstrap.sh
     networks:
       - nw
   ambaris:

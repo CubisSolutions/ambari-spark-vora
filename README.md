@@ -12,10 +12,15 @@ Building the docker images
 ```
 docker build -t base ./base
 docker build -t ambari_master ./ambari/master
+docker build -t ambari_agent ./ambari/agent
 ```
 Running the docker image:
 ```
 docker-compose up -d
+```
+Accessing the master linux node:
+```
+docker exec -it ambari_master /bin/bash
 ```
 Stopping the docker image:
 ```
@@ -25,8 +30,19 @@ Starting the ambari webgui (admin/admin):
 - Determine IP of the docker machine: 
 ```
 docker-machine ip default
+add the ip to the "C:\Windows\System32\drivers\etc\hosts" file (start editor as administrator):
+                                                                                              
+{ip}  ambarim.cubis ambarim
 ```
-- Start the webgui: 
+- Start the ambari webgui: 
 ```
-http://{ip}:8080
+http://ambarim.cubis:8080
 ```
+- Start the zeppelin notebook: 
+```
+http://ambarim.cubis:9099
+```
+##Testing the environment
+
+See [wiki](https://github.com/CubisSolutions/ambari-spark-vora/wiki/Testing-the-vora-environment)  
+
