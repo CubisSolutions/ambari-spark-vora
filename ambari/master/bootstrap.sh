@@ -29,19 +29,36 @@ while true ; do
      sleep 5  
   fi
 done
-printf '\n'
+printf '\nDone'
 
-# Set variables that will be initialized for every user
-# echo 'export LD_LIBRARY_PATH=/usr/hdp/2.3.4.7-4/hadoop/lib/native' >> /etc/bash.bashrc
-# echo 'export JAVA_HOME=/usr/jdk64/jdk1.8.0_60' >> /etc/bash.bashrc
-# echo 'export HADOOP_CONF_DIR=/etc/hadoop/conf' >> /etc/bash.bashrc
-# echo 'export SPARK_HOME=/usr/hdp/2.3.4.7-4/spark' >> /etc/bash.bashrc
-# echo 'export SPARK_CONF_DIR=$SPARK_HOME/conf' >> /etc/bash.bashrc
-# echo 'export PATH=$PATH:$SPARK_HOME/bin' >> /etc/bash.bashrc  
+# variables defined in bash.bashrc not available on docker entrypoint startup
 
+export JAVA_HOME=/usr/jdk64/jdk1.8.0_60 
+export HADOOP_CONF_DIR=/etc/hadoop/conf
+export SPARK_HOME=/usr/hdp/2.3.4.7-4/spark
+export SPARK_CONF_DIR=$SPARK_HOME/conf
+export PATH=$PATH:$SPARK_HOME/bin 
+export LD_LIBRARY_PATH=/usr/hdp/2.3.4.7-4/hadoop/lib/native 
+ 
 # Prepare HDFS for vora
 su hdfs -c "hadoop fs -mkdir /user/vora"
 su hdfs -c "hadoop fs -chown vora /user/vora"
+
+# Try to tart the zeppelin service
+sudo vora -c set
+while true ; do
+  su vora -c "/home/vora/zeppelin-0.5.6-incubating-bin-all/bin/zeppelin-daemon.sh start"
+  message=$(su vora -c "/home/vora/zeppelin-0.5.6-incubating-bin-all/bin/zeppelin-daemon.sh status" | grep running)
+  if grep -qw 'OK' <<< "$message" ; then
+     break
+  else
+     printf '.'
+     sleep 5  
+  fi
+done
+
+su vora -c "echo '1,2,Hello' > /home/vora/test.csv"
+su vora -c "hadoop fs -put /home/vora/test.csv"
 
 while true ; do
    sleep 100000
