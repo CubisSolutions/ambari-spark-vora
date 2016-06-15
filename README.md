@@ -46,3 +46,7 @@ http://ambarim.cubis:9099
 
 See [wiki](https://github.com/CubisSolutions/ambari-spark-vora/wiki/Testing-the-vora-environment)  
 
+##Versions
+
+v1.0: Delivers standalone cluster SPARK-HDFS-VORA runnable in docker.
+
