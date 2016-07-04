@@ -61,7 +61,7 @@ RUN echo 'export LD_LIBRARY_PATH=/usr/hdp/2.3.4.7-4/hadoop/lib/native' >> /etc/b
     echo 'export HADOOP_CONF_DIR=/etc/hadoop/conf' >> /etc/bash.bashrc && \
     echo 'export SPARK_HOME=/usr/hdp/2.3.4.7-4/spark' >> /etc/bash.bashrc && \
     echo 'export SPARK_CONF_DIR=$SPARK_HOME/conf' >> /etc/bash.bashrc && \
-    echo 'export SPARK_VORA_HOME=/var/lib/ambari-server/resources/stacks/HDP/2.3/services/vora-base/package/lib/vora-spark' >> /etc/bash.bashrc && \
+    echo 'export SPARK_VORA_HOME=/var/lib/ambari-agent/cache/stacks/HDP/2.3/services/vora-base/package/lib/vora-spark' >> /etc/bash.bashrc && \
     echo 'export PATH=$PATH:$SPARK_HOME/bin' >> /etc/bash.bashrc 
     
 EXPOSE 2181 4040 8020 8042 8080 8088 8300 8500 9099 9225 18080 49155 50070 
