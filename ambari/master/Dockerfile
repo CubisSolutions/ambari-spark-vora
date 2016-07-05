@@ -25,8 +25,12 @@ COPY ./scripts/* /root/
 
 # Copy the VORA repository for installation in the container
 COPY ./VORA_AM1_02_0-70001227.TGZ /root/VORA_AM.TGZ
+
+# Copy the VORA controler for installation in the container
+COPY ./controller.distribution-1.6.0-Ambari-Archive.tar.gz /root/VORA_CO.TGZ
  
 # Extract the VORA files to the HDP service directory
+RUN tar -xzvf /root/VORA_CO.TGZ -C /var/lib/ambari-server/resources/stacks/HDP/2.3/services
 RUN tar -xzvf /root/VORA_AM.TGZ -C /var/lib/ambari-server/resources/stacks/HDP/2.3/services
 
 RUN rm /root/*.TGZ

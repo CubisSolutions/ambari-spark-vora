@@ -16,7 +16,7 @@ services:
       - 9225:9225
       - 18080:18080
       - 50070:50070
-    entrypoint: /bin/bash -c /root/bootstrap.sh
+    entrypoint: /root/bootstrap.sh
     dns: 10.104.1.11
     networks:
       - nw
