@@ -3,7 +3,7 @@ MAINTAINER pascal.de.poorter@cubis.be
 
 # Add the ambari repo to the repository list
 RUN cd /etc/apt/sources.list.d && \
-    wget http://public-repo-1.hortonworks.com/ambari/ubuntu14/2.x/updates/2.2.0.0/ambari.list && \
+    wget -nv http://public-repo-1.hortonworks.com/ambari/ubuntu14/2.x/updates/2.2.0.0/ambari.list && \
     apt-key adv --recv-keys --keyserver keyserver.ubuntu.com B9733A7A07513CAD && \
     apt-get update && \
     apt-get install -y ambari-server
@@ -37,7 +37,7 @@ RUN rm /root/*.TGZ
 
 # Install Zeppelin under the vora user
 USER vora
-RUN wget -O /home/vora/ZEPPELIN.TGZ http://www-us.apache.org/dist/incubator/zeppelin/0.5.6-incubating/zeppelin-0.5.6-incubating-bin-all.tgz
+RUN wget -O /home/vora/ZEPPELIN.TGZ http://archive.apache.org/dist/incubator/zeppelin/0.5.6-incubating/zeppelin-0.5.6-incubating-bin-all.tgz
 RUN tar -xzvf /home/vora/ZEPPELIN.TGZ -C /home/vora && \
     cp /home/vora/zeppelin-0.5.6-incubating-bin-all/conf/zeppelin-site.xml.template /home/vora/zeppelin-0.5.6-incubating-bin-all/conf/zeppelin-site.xml && \
     chmod 0755 /home/vora/zeppelin-0.5.6-incubating-bin-all/conf/zeppelin-site.xml && \
@@ -60,12 +60,12 @@ RUN rm /home/vora/*.TGZ
 
 USER root
 
-RUN echo 'export LD_LIBRARY_PATH=/usr/hdp/2.3.4.7-4/hadoop/lib/native' >> /etc/bash.bashrc && \
+RUN echo 'export LD_LIBRARY_PATH=/usr/hdp/2.3.6.0-3796/hadoop/lib/native' >> /etc/bash.bashrc && \
     echo 'export JAVA_HOME=/usr/jdk64/jdk1.8.0_60' >> /etc/bash.bashrc && \
     echo 'export HADOOP_CONF_DIR=/etc/hadoop/conf' >> /etc/bash.bashrc && \
-    echo 'export SPARK_HOME=/usr/hdp/2.3.4.7-4/spark' >> /etc/bash.bashrc && \
+    echo 'export SPARK_HOME=/usr/hdp/2.3.6.0-3796/spark' >> /etc/bash.bashrc && \
     echo 'export SPARK_CONF_DIR=$SPARK_HOME/conf' >> /etc/bash.bashrc && \
     echo 'export SPARK_VORA_HOME=/var/lib/ambari-agent/cache/stacks/HDP/2.3/services/vora-base/package/lib/vora-spark' >> /etc/bash.bashrc && \
     echo 'export PATH=$PATH:$SPARK_HOME/bin' >> /etc/bash.bashrc 
     
-EXPOSE 2181 4040 8020 8042 8080 8088 8300 8500 9099 9225 18080 49155 50070 
+EXPOSE 2181 4040 7860 7861 8020 8042 8080 8088 8300 8500 9099 9225 18080 31015 45054 49155 50070 56000-58000

@@ -35,10 +35,10 @@ printf '\nDone'
 
 export JAVA_HOME=/usr/jdk64/jdk1.8.0_60 
 export HADOOP_CONF_DIR=/etc/hadoop/conf
-export SPARK_HOME=/usr/hdp/2.3.4.7-4/spark
+export SPARK_HOME=/usr/hdp/2.3.6.0-3796/spark
 export SPARK_CONF_DIR=$SPARK_HOME/conf
 export PATH=$PATH:$SPARK_HOME/bin 
-export LD_LIBRARY_PATH=/usr/hdp/2.3.4.7-4/hadoop/lib/native 
+export LD_LIBRARY_PATH=/usr/hdp/2.3.6.0-3796/hadoop/lib/native 
  
 # Prepare HDFS for vora
 su hdfs -c "hadoop fs -mkdir /user/vora"
