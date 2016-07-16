@@ -372,7 +372,7 @@
           }
         },
         "properties" : {
-          "spark.executor.memory" : "3g",
+          "spark.executor.memory" : "512m",
           "sap.hana.es.spark.yarn.jar" : "file:///usr/sap/spark/controller/lib/external/spark-assembly-1.5.2-hadoop2.6.0.jar",
           "sap.hana.hadoop.datastore" : "hive",
           "spark.dynamicAllocation.maxExecutors" : "5",
@@ -380,7 +380,7 @@
           "spark.shuffle.service.enabled" : "false",
           "sap.hana.es.ssl.clientauth.required" : "true",
           "sap.hana.es.ssl.verify.hostname" : "true",
-          "spark.executor.instances" : "10",
+          "spark.executor.instances" : "3",
           "sap.hana.es.server.port" : "7860",
           "sap.hana.es.ssl.enabled" : "false",
           "spark.dynamicAllocation.enabled" : "false"

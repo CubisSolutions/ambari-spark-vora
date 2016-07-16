@@ -60,6 +60,14 @@ done
 su vora -c "echo '1,2,Hello' > /home/vora/test.csv"
 su vora -c "hadoop fs -put /home/vora/test.csv"
 
+mv /root/SHA_create_employee_table.sql /home/hive/
+mv /root/SHA_Employee.dat /home/hive
+
+chown hive:hive /home/hive/*
+ 
+su hive -c "hive -f /home/hive/SHA_create_employee_table.sql"
+su hive -c "hdfs dfs -put /home/hive/SHA_Employee.dat /apps/hive/warehouse/sha.db/employee"
+
 while true ; do
    sleep 100000
 done
