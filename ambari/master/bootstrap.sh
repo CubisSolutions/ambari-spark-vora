@@ -68,6 +68,14 @@ chown hive:hive /home/hive/*
 su hive -c "hive -f /home/hive/SHA_create_employee_table.sql"
 su hive -c "hdfs dfs -put /home/hive/SHA_Employee.dat /apps/hive/warehouse/sha.db/employee"
 
+# Copy spark Controller jars to hdfs
+su hdfs -c "hdfs dfs -mkdir -p /sap/hana/spark/libs/thridparty"
+su hdfs -c "hdfs dfs -mkdir -p $SPARK_HOME/lib/spark-assembly-1.5.1.2.3.6.0-3796-hadoop2.7.1.2.3.6.0-3796.jar /sap/hana/spark/libs/"
+su hdfs -c "hdfs dfs -mkdir -p $SPARK_HOME/lib/datanucleus-core-3.2.10.jar /sap/hana/spark/libs/thridparty"
+su hdfs -c "hdfs dfs -mkdir -p $SPARK_HOME/lib/datanucleus-api-jdo-3.2.6.jar /sap/hana/spark/libs/thridparty"
+su hdfs -c "hdfs dfs -mkdir -p $SPARK_HOME/lib/datanucleus-rdbms-3.2.9.jar /sap/hana/spark/libs/thridparty"
+su hdfs -c "hdfs dfs -mkdir -p /usr/sap/spark/controller/lib.jar /sap/hana/spark/libs/thridparty"
+
 while true ; do
    sleep 100000
 done

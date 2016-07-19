@@ -68,4 +68,4 @@ RUN echo 'export LD_LIBRARY_PATH=/usr/hdp/2.3.6.0-3796/hadoop/lib/native' >> /et
     echo 'export SPARK_VORA_HOME=/var/lib/ambari-agent/cache/stacks/HDP/2.3/services/vora-base/package/lib/vora-spark' >> /etc/bash.bashrc && \
     echo 'export PATH=$PATH:$SPARK_HOME/bin' >> /etc/bash.bashrc 
     
-EXPOSE 2181 4040 7860 7861 8020 8042 8080 8088 8300 8500 9099 9225 18080 31015 45054 49155 50070 56000-58000
+EXPOSE 2181 4040 7860 7861 8020 8042 8080 8088 8300 8500 9083 9099 9225 18080 31015 45054 49155 50070 56000-58000
