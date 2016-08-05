@@ -60,21 +60,25 @@ done
 su vora -c "echo '1,2,Hello' > /home/vora/test.csv"
 su vora -c "hadoop fs -put /home/vora/test.csv"
 
-mv /root/SHA_create_employee_table.sql /home/hive/
-mv /root/SHA_Employee.dat /home/hive
+# mv /root/SHA_create_employee_table.sql /home/hive/
+# mv /root/SHA_Employee.dat /home/hive
 
 chown hive:hive /home/hive/*
  
 su hive -c "hive -f /home/hive/SHA_create_employee_table.sql"
 su hive -c "hdfs dfs -put /home/hive/SHA_Employee.dat /apps/hive/warehouse/sha.db/employee"
 
+# cp spark-sap-datasource...jar to spark controller library
+cp /var/lib/ambari-server/resources/stacks/HDP/2.3/services/vora-base/package/lib/vora-spark/lib/spark-sap-datasources-1.2.33-assembly.jar /usr/sap/spark/controller/lib/
+chown hanaes:sapsys /usr/sap/spark/controller/lib/spark-sap-datasources-1.2.33-assembly.jar 
+
 # Copy spark Controller jars to hdfs
-su hdfs -c "hdfs dfs -mkdir -p /sap/hana/spark/libs/thridparty"
-su hdfs -c "hdfs dfs -mkdir -p $SPARK_HOME/lib/spark-assembly-1.5.1.2.3.6.0-3796-hadoop2.7.1.2.3.6.0-3796.jar /sap/hana/spark/libs/"
-su hdfs -c "hdfs dfs -mkdir -p $SPARK_HOME/lib/datanucleus-core-3.2.10.jar /sap/hana/spark/libs/thridparty"
-su hdfs -c "hdfs dfs -mkdir -p $SPARK_HOME/lib/datanucleus-api-jdo-3.2.6.jar /sap/hana/spark/libs/thridparty"
-su hdfs -c "hdfs dfs -mkdir -p $SPARK_HOME/lib/datanucleus-rdbms-3.2.9.jar /sap/hana/spark/libs/thridparty"
-su hdfs -c "hdfs dfs -mkdir -p /usr/sap/spark/controller/lib.jar /sap/hana/spark/libs/thridparty"
+# su hdfs -c "hdfs dfs -mkdir -p /sap/hana/spark/libs/thirdparty"
+# su hdfs -c "hdfs dfs -put $SPARK_HOME/lib/spark-assembly-1.5.1.2.3.6.0-3796-hadoop2.7.1.2.3.6.0-3796.jar /sap/hana/spark/libs/"
+# su hdfs -c "hdfs dfs -put -p $SPARK_HOME/lib/datanucleus-core-3.2.10.jar /sap/hana/spark/libs/thridparty"
+# su hdfs -c "hdfs dfs -put -p $SPARK_HOME/lib/datanucleus-api-jdo-3.2.6.jar /sap/hana/spark/libs/thridparty"
+# su hdfs -c "hdfs dfs -put -p $SPARK_HOME/lib/datanucleus-rdbms-3.2.9.jar /sap/hana/spark/libs/thridparty"
+# su hdfs -c "hdfs dfs -put -p /usr/sap/spark/controller/lib.jar /sap/hana/spark/libs/thridparty"
 
 while true ; do
    sleep 100000
