@@ -3,13 +3,25 @@
   "host_groups" : [
     {
       "name" : "host_group_1",
-      "host_count" : 2 
+      "hosts" : [
+        {
+          "fqdn" : "ambaria1.cubis"
+        }
+      ]
     },
     {
       "name" : "host_group_2",
       "hosts" : [
         {
           "fqdn" : "ambarim.cubis"
+        }
+      ]
+    },
+    {
+      "name" : "host_group_4",
+      "hosts" : [
+        {
+          "fqdn" : "ambaria1.cubis"
         }
       ]
     },
