@@ -21,7 +21,7 @@
       "name" : "host_group_4",
       "hosts" : [
         {
-          "fqdn" : "ambaria1.cubis"
+          "fqdn" : "ambaria2.cubis"
         }
       ]
     },
