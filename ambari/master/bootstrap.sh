@@ -63,10 +63,10 @@ su vora -c "hadoop fs -put /home/vora/test.csv"
 # mv /root/SHA_create_employee_table.sql /home/hive/
 # mv /root/SHA_Employee.dat /home/hive
 
-chown hive:hive /home/hive/*
+# chown hive:hive /home/hive/*
  
-su hive -c "hive -f /home/hive/SHA_create_employee_table.sql"
-su hive -c "hdfs dfs -put /home/hive/SHA_Employee.dat /apps/hive/warehouse/sha.db/employee"
+# su hive -c "hive -f /home/hive/SHA_create_employee_table.sql"
+# su hive -c "hdfs dfs -put /home/hive/SHA_Employee.dat /apps/hive/warehouse/sha.db/employee"
 
 # cp spark-sap-datasource...jar to spark controller library
 cp /var/lib/ambari-server/resources/stacks/HDP/2.3/services/vora-base/package/lib/vora-spark/lib/spark-sap-datasources-1.2.33-assembly.jar /usr/sap/spark/controller/lib/
