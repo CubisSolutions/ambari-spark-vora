@@ -642,7 +642,7 @@
     },
     {
       "hana_hadoop-env" : {
-        "properties_attributes" : { },
+        "properties_attributes" : {  },
         "properties" : {
           "content" : "#!/bin/bash\n        export HADOOP_CONF_DIR=/etc/hadoop/conf\n        export HIVE_CONF_DIR=/etc/hive/conf\n        export HANAES_LOG_DIR=/var/log/hanaes\n        export HANA_SPARK_ASSEMBLY_JAR=/usr/hdp/2.3.6.0-3796/spark/lib/spark-assembly-1.5.1.2.3.6.0-3796-hadoop2.7.1.2.3.6.0-3796.jar\n        #export HANA_SPARK_ADDITIONAL_JARS=\n        #export HANAES_CONF_DIR=/etc/hanaes/conf"
         }
