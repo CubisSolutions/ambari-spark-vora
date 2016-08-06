@@ -20,9 +20,9 @@ services:
       - 50070:50070
     entrypoint: /root/bootstrap.sh
     dns:
-      - 10.104.1.11
       - 8.8.8.8
       - 8.8.4.4
+      - 10.104.1.11
     networks:
       - nw
   ambaris:
@@ -34,9 +34,9 @@ services:
       - 10000:10000
       - 56000:56000
     dns:
-      - 10.104.1.11
       - 8.8.8.8
       - 8.8.4.4
+      - 10.104.1.11
     networks:
       - nw
   ambaria1:
@@ -45,9 +45,9 @@ services:
     hostname: ambaria1.cubis
     entrypoint: /root/bootstrap.sh
     dns:
-      - 10.104.1.11
       - 8.8.8.8
       - 8.8.4.4
+      - 10.104.1.11
     networks:
       - nw
   ambaria2:
@@ -56,9 +56,9 @@ services:
     hostname: ambaria2.cubis
     entrypoint: /root/bootstrap.sh
     dns:
-      - 10.104.1.11
       - 8.8.8.8
       - 8.8.4.4
+      - 10.104.1.11
     networks:
       - nw
       
