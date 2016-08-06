@@ -644,7 +644,7 @@
       "hana_hadoop-env" : {
         "properties_attributes" : { },
         "properties" : {
-          "content" : "#!/bin/bash\n        export HADOOP_CONF_DIR=/etc/hadoop/conf\n        export HIVE_CONF_DIR=/etc/hive/conf\n        export HANAES_LOG_DIR=/var/log/hanaes\n        export HANA_SPARK_ASSEMBLY_JAR=$SPARK_HOME/lib/spark-assembly-1.5.2.2.3.4.0-3485-hadoop2.7.1.2.3.4.0-3485.jar\n        #export HANA_SPARK_ADDITIONAL_JARS=\n        #export HANAES_CONF_DIR=/etc/hanaes/conf"
+          "content" : "#!/bin/bash\n        export HADOOP_CONF_DIR=/etc/hadoop/conf\n        export HIVE_CONF_DIR=/etc/hive/conf\n        export HANAES_LOG_DIR=/var/log/hanaes\n        export HANA_SPARK_ASSEMBLY_JAR=/usr/hdp/2.3.6.0-3796/spark/lib/spark-assembly-1.5.1.2.3.6.0-3796-hadoop2.7.1.2.3.6.0-3796.jar\n        #export HANA_SPARK_ADDITIONAL_JARS=\n        #export HANAES_CONF_DIR=/etc/hanaes/conf"
         }
       }
     },
@@ -920,12 +920,12 @@
         "properties_attributes" : { },
         "properties" : {
           "vora_discovery_bootstrap_timeout" : "30",
-          "vora_discovery_servers" : "master.i-058294a6417a25b42.cluster,secondary.i-0dcec3e1fe2047691.cluster,secondary2.i-01c474ae051a2c415.cluster",
+          "vora_discovery_servers" : "ambarim.cubis, ambaris.cubis, ambaria2.cubis",
           "vora_discovery_data_dir" : "/var/local/vora-discovery",
           "vora_discovery_bind_interface" : "eth0",
           "vora_discovery_log_dir" : "/var/log/vora-discovery",
           "vora_discovery_log_level" : "WARNING",
-          "vora_discovery_bootstrap_host" : "master.i-058294a6417a25b42.cluster"
+          "vora_discovery_bootstrap_host" : "ambarim.cubis"
         }
       }
     },
