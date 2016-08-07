@@ -18,6 +18,8 @@ services:
       - 18080:18080
       - 31015:31015
       - 50070:50070
+      - 56000:56000
+      - 56050:56050
     entrypoint: /root/bootstrap.sh
     dns:
       - 8.8.8.8
@@ -32,7 +34,8 @@ services:
     entrypoint: /root/bootstrap.sh
     ports:
       - 10000:10000
-      - 56000:56000
+      - 56100:56100
+      - 56150:56150
     dns:
       - 8.8.8.8
       - 8.8.4.4

@@ -28,6 +28,9 @@ COPY ./VORA_AM1_02_0-70001227.TGZ /root/VORA_AM.TGZ
 
 # Copy the VORA controler for installation in the container
 COPY ./controller.distribution-1.6.0-Ambari-Archive.tar.gz /root/VORA_CO.TGZ
+
+# Overwrite internal container to public adress for hana sda data retrieval. 
+COPY ./DockerResolver.jar /root/DockerResolver.jar
  
 # Extract the VORA files to the HDP service directory
 RUN tar -xzvf /root/VORA_CO.TGZ -C /var/lib/ambari-server/resources/stacks/HDP/2.3/services
@@ -67,8 +70,5 @@ RUN echo 'export LD_LIBRARY_PATH=/usr/hdp/2.3.6.0-3796/hadoop/lib/native' >> /et
     echo 'export SPARK_CONF_DIR=$SPARK_HOME/conf' >> /etc/bash.bashrc && \
     echo 'export SPARK_VORA_HOME=/var/lib/ambari-agent/cache/stacks/HDP/2.3/services/vora-base/package/lib/vora-spark' >> /etc/bash.bashrc && \
     echo 'export PATH=$PATH:$SPARK_HOME/bin' >> /etc/bash.bashrc
-
-RUN echo 'sparkres        56000/tcp               # reserve for sap' >> /etc/services && \
-    echo 'sparkres        56000/udp               # reserve for sap' >> /etc/services 
     
 EXPOSE 2181 4040 7860 7861 8020 8042 8080 8088 8300 8500 9083 9099 9225 18080 31015 45054 49155 50070 56000-58000

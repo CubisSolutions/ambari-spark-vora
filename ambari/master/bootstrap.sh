@@ -70,7 +70,8 @@ su vora -c "hadoop fs -put /home/vora/test.csv"
 
 # cp spark-sap-datasource...jar to spark controller library
 cp /var/lib/ambari-server/resources/stacks/HDP/2.3/services/vora-base/package/lib/vora-spark/lib/spark-sap-datasources-1.2.33-assembly.jar /usr/sap/spark/controller/lib/
-chown hanaes:sapsys /usr/sap/spark/controller/lib/spark-sap-datasources-1.2.33-assembly.jar 
+cp /root/DockerResolver.jar /usr/sap/spark/controller/lib/
+chown hanaes:sapsys /usr/sap/spark/controller/lib/* 
 
 # Copy spark Controller jars to hdfs
 # su hdfs -c "hdfs dfs -mkdir -p /sap/hana/spark/libs/thirdparty"
