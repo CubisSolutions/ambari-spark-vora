@@ -9,15 +9,23 @@ services:
     hostname: ambarim.cubis
     ports:
       - 4040:4040
+      - 7860:7860
       - 8080:8080
       - 8088:8088
       - 8500:8500
       - 9099:9099
-      - 9225:9225
       - 18080:18080
+      - 31015:31015
       - 50070:50070
-    entrypoint: /bin/bash -c /root/bootstrap.sh
-    dns: 10.104.1.11
+      - 56000:56000
+      - 56050:56050
+    entrypoint: /root/bootstrap.sh
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 10.104.1.11
+    volumes:
+      - ${HOSTDATA}:/hostdata
     networks:
       - nw
   ambaris:
@@ -25,6 +33,14 @@ services:
     container_name: ambaris.cubis
     hostname: ambaris.cubis
     entrypoint: /root/bootstrap.sh
+    ports:
+      - 10000:10000
+      - 56100:56100
+      - 56150:56150
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 10.104.1.11
     networks:
       - nw
   ambaria1:
@@ -32,6 +48,12 @@ services:
     container_name: ambaria1.cubis
     hostname: ambaria1.cubis
     entrypoint: /root/bootstrap.sh
+    ports:
+      - 9225:9225
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 10.104.1.11
     networks:
       - nw
   ambaria2:
@@ -39,6 +61,10 @@ services:
     container_name: ambaria2.cubis
     hostname: ambaria2.cubis
     entrypoint: /root/bootstrap.sh
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+      - 10.104.1.11
     networks:
       - nw
       

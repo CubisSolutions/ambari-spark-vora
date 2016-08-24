@@ -35,10 +35,10 @@ printf '\nDone'
 
 export JAVA_HOME=/usr/jdk64/jdk1.8.0_60 
 export HADOOP_CONF_DIR=/etc/hadoop/conf
-export SPARK_HOME=/usr/hdp/2.3.4.7-4/spark
+export SPARK_HOME=/usr/hdp/2.3.6.0-3796/spark
 export SPARK_CONF_DIR=$SPARK_HOME/conf
 export PATH=$PATH:$SPARK_HOME/bin 
-export LD_LIBRARY_PATH=/usr/hdp/2.3.4.7-4/hadoop/lib/native 
+export LD_LIBRARY_PATH=/usr/hdp/2.3.6.0-3796/hadoop/lib/native 
  
 # Prepare HDFS for vora
 su hdfs -c "hadoop fs -mkdir /user/vora"
@@ -59,6 +59,38 @@ done
 
 su vora -c "echo '1,2,Hello' > /home/vora/test.csv"
 su vora -c "hadoop fs -put /home/vora/test.csv"
+
+# mv /root/SHA_create_employee_table.sql /home/hive/
+# mv /root/SHA_Employee.dat /home/hive
+
+# chown hive:hive /home/hive/*
+ 
+# su hive -c "hive -f /home/hive/SHA_create_employee_table.sql"
+# su hive -c "hdfs dfs -put /home/hive/SHA_Employee.dat /apps/hive/warehouse/sha.db/employee"
+
+# cp spark-sap-datasource...jar to spark controller library
+cp /var/lib/ambari-server/resources/stacks/HDP/2.3/services/vora-base/package/lib/vora-spark/lib/spark-sap-datasources-1.2.33-assembly.jar /usr/sap/spark/controller/lib/
+cp /root/DockerResolver.jar /usr/sap/spark/controller/lib/
+chown hanaes:sapsys /usr/sap/spark/controller/lib/* 
+
+# Copy spark Controller jars to hdfs
+# su hdfs -c "hdfs dfs -mkdir -p /sap/hana/spark/libs/thirdparty"
+# su hdfs -c "hdfs dfs -put $SPARK_HOME/lib/spark-assembly-1.5.1.2.3.6.0-3796-hadoop2.7.1.2.3.6.0-3796.jar /sap/hana/spark/libs/"
+# su hdfs -c "hdfs dfs -put -p $SPARK_HOME/lib/datanucleus-core-3.2.10.jar /sap/hana/spark/libs/thridparty"
+# su hdfs -c "hdfs dfs -put -p $SPARK_HOME/lib/datanucleus-api-jdo-3.2.6.jar /sap/hana/spark/libs/thridparty"
+# su hdfs -c "hdfs dfs -put -p $SPARK_HOME/lib/datanucleus-rdbms-3.2.9.jar /sap/hana/spark/libs/thridparty"
+# su hdfs -c "hdfs dfs -put -p /usr/sap/spark/controller/lib.jar /sap/hana/spark/libs/thridparty"
+
+# restart discovery services, vora thriftserver and spark controller, they fail after initial start even if they show OK in ambari managment console
+curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart Vora Discovery Server"}, "Requests/resource_filters":[ {"service_name": "HANA_VORA_DISCOVERY", "component_name": "HANA_VORA_DISCOVERY_SERVER", "hosts": "ambarim.cubis, ambaria2.cubis, ambaris.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
+
+sleep 5
+
+curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart Vora Discovery Client"}, "Requests/resource_filters":[ {"service_name": "HANA_VORA_DISCOVERY", "component_name": "HANA_VORA_DISCOVERY_CLIENT", "hosts": "ambaria1.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
+
+curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart SparkController"}, "Requests/resource_filters":[ {"service_name": "SparkController", "component_name": "SparkController", "hosts": "ambarim.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
+
+curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart Vora ThriftServer"}, "Requests/resource_filters":[ {"service_name": "HANA_VORA_THRIFTSERVER", "component_name": "HANA_VORA_THRIFTSERVER_MASTER", "hosts": "ambaria1.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
 
 while true ; do
    sleep 100000

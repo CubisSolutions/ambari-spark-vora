@@ -7,6 +7,4 @@ sed -i "s/hostname=localhost/hostname=ambarim.cubis/g" /etc/ambari-agent/conf/am
 # Start the ambari agent.
 ambari-agent start
 
-while true ; do
-  sleep 100000
-done
+java -cp /root com.cubis.PortLocker 56000 56050

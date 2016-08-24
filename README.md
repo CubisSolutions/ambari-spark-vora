@@ -8,7 +8,7 @@ Docker needs to be installed on in order to run the environment and can be found
 
 Building the docker images
 
-**Note:** *You should get the VORA package (VORA_AM1_02_0-70001227.TGZ) from* [SAP Download](https://launchpad.support.sap.com/#/softwarecenter/search/vora%25201.2) *and store it under the ./ambari/master folder. It's also internally available on dropbox.*
+**Note:** *You should get the VORA package (VORA_AM1_02_0-70001227.TGZ) from* [SAP Download](https://launchpad.support.sap.com/#/softwarecenter/search/vora%25201.2) *and store it under the ./ambari/master folder. You also need the hana controler 1.6 from [SAP Download](https://launchpad.support.sap.com/#/softwarecenter/search/spark%2520controller). Extract the zip and store the tar.gz file under ./ambari/master*. The files are also internally available on dropbox.
 ```
 docker build -t base ./base
 docker build -t ambari_master ./ambari/master
@@ -50,3 +50,4 @@ See [wiki](https://github.com/CubisSolutions/ambari-spark-vora/wiki/Testing-the-
 
 v1.0: Delivers standalone cluster SPARK-HDFS-VORA runnable in docker.
 
+V1.1: Cluster with extended with HANA Spark Controller. Read/write to SAP HANA from SPARK possible.
