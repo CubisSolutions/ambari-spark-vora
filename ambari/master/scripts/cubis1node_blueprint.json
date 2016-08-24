@@ -515,7 +515,7 @@
           "vora_thriftserver_log_dir" : "/var/log/vora-thriftserver",
           "vora_thriftserver_java_home" : "/usr/jdk64/jdk1.8.0_60",
           "vora_thriftserver_metastore_dir" : "/tmp/vora-thriftserver",
-          "vora_thriftserver_spark_home" : "/usr/hdp/2.3.4.0-3485/spark/",
+          "vora_thriftserver_spark_home" : "/usr/hdp/2.3.6.0-3796/spark/",
           "vora_thriftserver_log_level" : "WARNING"
         }
       }

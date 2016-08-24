@@ -81,6 +81,17 @@ chown hanaes:sapsys /usr/sap/spark/controller/lib/*
 # su hdfs -c "hdfs dfs -put -p $SPARK_HOME/lib/datanucleus-rdbms-3.2.9.jar /sap/hana/spark/libs/thridparty"
 # su hdfs -c "hdfs dfs -put -p /usr/sap/spark/controller/lib.jar /sap/hana/spark/libs/thridparty"
 
+# restart discovery services, vora thriftserver and spark controller, they fail after initial start even if they show OK in ambari managment console
+curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart Vora Discovery Server"}, "Requests/resource_filters":[ {"service_name": "HANA_VORA_DISCOVERY", "component_name": "HANA_VORA_DISCOVERY_SERVER", "hosts": "ambarim.cubis, ambaria2.cubis, ambaris.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
+
+sleep 5
+
+curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart Vora Discovery Client"}, "Requests/resource_filters":[ {"service_name": "HANA_VORA_DISCOVERY", "component_name": "HANA_VORA_DISCOVERY_CLIENT", "hosts": "ambaria1.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
+
+curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart SparkController"}, "Requests/resource_filters":[ {"service_name": "SparkController", "component_name": "SparkController", "hosts": "ambarim.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
+
+curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart Vora ThriftServer"}, "Requests/resource_filters":[ {"service_name": "HANA_VORA_THRIFTSERVER", "component_name": "HANA_VORA_THRIFTSERVER_MASTER", "hosts": "ambaria1.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
+
 while true ; do
    sleep 100000
 done

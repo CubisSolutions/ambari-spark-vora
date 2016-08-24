@@ -14,7 +14,6 @@ services:
       - 8088:8088
       - 8500:8500
       - 9099:9099
-      - 9225:9225
       - 18080:18080
       - 31015:31015
       - 50070:50070
@@ -25,6 +24,8 @@ services:
       - 8.8.8.8
       - 8.8.4.4
       - 10.104.1.11
+    volumes:
+      - ${HOSTDATA}:/hostdata
     networks:
       - nw
   ambaris:
@@ -47,6 +48,8 @@ services:
     container_name: ambaria1.cubis
     hostname: ambaria1.cubis
     entrypoint: /root/bootstrap.sh
+    ports:
+      - 9225:9225
     dns:
       - 8.8.8.8
       - 8.8.4.4
