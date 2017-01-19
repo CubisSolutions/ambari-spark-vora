@@ -1,4 +1,7 @@
 #!/bin/bash
+# inform host about ip adress
+echo "$(hostname -i)" > /hostdata/$(hostname)
+
 # service ssh start
 service ntp start
 

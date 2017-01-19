@@ -18,28 +18,36 @@
       "capacity-scheduler" : {
         "properties_attributes" : { },
         "properties" : {
-          "yarn.scheduler.capacity.root.vora.capacity" : "40",
+          "yarn.scheduler.capacity.root.vora.capacity" : "10",
+          "yarn.scheduler.capacity.root.zeppelin.capacity" : "10",
           "yarn.scheduler.capacity.root.accessible-node-labels" : "*",
           "yarn.scheduler.capacity.root.vora.ordering-policy" : "fifo",
+          "yarn.scheduler.capacity.root.zeppelin.ordering-policy" : "fifo",
           "yarn.scheduler.capacity.maximum-am-resource-percent" : "0.2",
           "yarn.scheduler.capacity.root.vora.acl_administer_queue" : "*",
+          "yarn.scheduler.capacity.root.zeppelin.acl_administer_queue" : "*",
           "yarn.scheduler.capacity.root.acl_administer_queue" : "*",
-          "yarn.scheduler.capacity.root.vora.maximum-capacity" : "40",
+          "yarn.scheduler.capacity.root.vora.maximum-capacity" : "10",
+          "yarn.scheduler.capacity.root.vora.maximum-capacity" : "10",
           "yarn.scheduler.capacity.root.vora.minimum-user-limit-percent" : "100",
+          "yarn.scheduler.capacity.root.zeppelin.minimum-user-limit-percent" : "100",
           "yarn.scheduler.capacity.resource-calculator" : "org.apache.hadoop.yarn.util.resource.DefaultResourceCalculator",
-          "yarn.scheduler.capacity.root.default.capacity" : "60",
+          "yarn.scheduler.capacity.root.default.capacity" : "80",
           "yarn.scheduler.capacity.root.default.user-limit-factor" : "1",
-          "yarn.scheduler.capacity.root.queues" : "default,vora",
+          "yarn.scheduler.capacity.root.queues" : "default,vora,zeppelin",
           "yarn.scheduler.capacity.root.capacity" : "100",
           "yarn.scheduler.capacity.root.default.acl_submit_applications" : "*",
           "yarn.scheduler.capacity.root.vora.acl_submit_applications" : "*",
-          "yarn.scheduler.capacity.root.default.maximum-capacity" : "100",
+          "yarn.scheduler.capacity.root.zeppelin.acl_submit_applications" : "*",
+          "yarn.scheduler.capacity.root.default.maximum-capacity" : "80",
           "yarn.scheduler.capacity.node-locality-delay" : "40",
           "yarn.scheduler.capacity.maximum-applications" : "10000",
           "yarn.scheduler.capacity.queue-mappings-override.enable" : "false",
           "yarn.scheduler.capacity.root.vora.state" : "RUNNING",
+          "yarn.scheduler.capacity.root.zeppelin.state" : "RUNNING",
           "yarn.scheduler.capacity.root.default.state" : "RUNNING",
-          "yarn.scheduler.capacity.root.vora.user-limit-factor" : "1"
+          "yarn.scheduler.capacity.root.vora.user-limit-factor" : "1",
+          "yarn.scheduler.capacity.root.zeppelin.user-limit-factor" : "1"
         }
       }
     },
@@ -489,7 +497,7 @@
       "hanaes-site" : {
         "properties_attributes" : { },
         "properties" : {
-          "spark.executor.memory" : "3g",
+          "spark.executor.memory" : "2g",
           "sap.hana.es.spark.yarn.jar" : "file:///usr/sap/spark/controller/lib/external/spark-assembly-1.5.2-hadoop2.6.0.jar",
           "sap.hana.hadoop.datastore" : "vora",
           "spark.dynamicAllocation.maxExecutors" : "20",
@@ -510,7 +518,7 @@
       "vora-thriftserver-config" : {
         "properties_attributes" : { },
         "properties" : {
-          "vora_thriftserver_extra_arguments" : "--conf vora.hadoop.distro=hdp",
+          "vora_thriftserver_extra_arguments" : "--conf vora.hadoop.distro=hdp --master yarn-client",
           "vora_thriftserver_service_registry" : "localhost:8500",
           "vora_thriftserver_log_dir" : "/var/log/vora-thriftserver",
           "vora_thriftserver_java_home" : "/usr/jdk64/jdk1.8.0_60",

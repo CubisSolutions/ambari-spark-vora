@@ -7,6 +7,8 @@ services:
     container_name: ambarim.cubis
     privileged: true
     hostname: ambarim.cubis
+    environment:
+      - vpnip=${vpnip}
     ports:
       - 4040:4040
       - 7860:7860
@@ -32,6 +34,8 @@ services:
     image: ambari_agent
     container_name: ambaris.cubis
     hostname: ambaris.cubis
+    environment:
+      - vpnip=${vpnip}
     entrypoint: /root/bootstrap.sh
     ports:
       - 10000:10000
@@ -41,30 +45,41 @@ services:
       - 8.8.8.8
       - 8.8.4.4
       - 10.104.1.11
+    volumes:
+      - ${HOSTDATA}:/hostdata
     networks:
       - nw
   ambaria1:
     image: ambari_agent
     container_name: ambaria1.cubis
     hostname: ambaria1.cubis
+    environment:
+      - vpnip=${vpnip} 
     entrypoint: /root/bootstrap.sh
     ports:
       - 9225:9225
+      - 49155:49155
     dns:
       - 8.8.8.8
       - 8.8.4.4
       - 10.104.1.11
+    volumes:
+      - ${HOSTDATA}:/hostdata
     networks:
       - nw
   ambaria2:
     image: ambari_agent
     container_name: ambaria2.cubis
     hostname: ambaria2.cubis
+    environment:
+      - vpnip=${vpnip}
     entrypoint: /root/bootstrap.sh
     dns:
       - 8.8.8.8
       - 8.8.4.4
       - 10.104.1.11
+    volumes:
+      - ${HOSTDATA}:/hostdata
     networks:
       - nw
       
