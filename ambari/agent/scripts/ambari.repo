@@ -1,0 +1,9 @@
+#VERSION_NUMBER=2.2.2.0-460
+
+[Updates-ambari-2.2.2.0]
+name=ambari-2.2.2.0 - Updates
+baseurl=http://repo.cubis/ambari/centos7/Updates-ambari-2.2.2.0/
+gpgcheck=0
+enabled=1
+priority=1
+

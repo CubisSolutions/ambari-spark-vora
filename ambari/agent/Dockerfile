@@ -2,24 +2,15 @@ FROM base
 MAINTAINER pascal.de.poorter@cubis.be
 
 # Add the ambari repo to the repository list
-RUN cd /etc/apt/sources.list.d && \
-    wget http://public-repo-1.hortonworks.com/ambari/ubuntu14/2.x/updates/2.2.0.0/ambari.list && \
-    apt-key adv --recv-keys --keyserver keyserver.ubuntu.com B9733A7A07513CAD && \
-    apt-get update && \
-    apt-get install -y ambari-agent
-
-RUN apt-get update && \
-    apt-get install -y software-properties-common
-    
-# add the java component.
-RUN sudo add-apt-repository ppa:webupd8team/java && \
-    apt-get update && \
-    echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | debconf-set-selections && \
-    apt-get install -y oracle-java8-installer
-    
+RUN yum -y install ambari-agent
+RUN sed -i "s/hostname=localhost/hostname=ambarim.cubis/" /etc/ambari-agent/conf/ambari-agent.ini
+ 
 # Copy startup script into the docker image
 COPY bootstrap.sh /root/bootstrap.sh
 RUN chmod +x /root/bootstrap.sh
+
+# Copy password file for vora tools
+COPY htpasswd /etc/vora/datatools/htpasswd
 
 # Copy PortLocker program to image. Portlocker is used with the docker
 # installation for Spark Hana Controller and locks some ports from being
@@ -36,4 +27,13 @@ RUN chmod +x /root/bootstrap.sh
 RUN mkdir -p /root/com/cubis
 COPY PortLocker.class /root/com/cubis/
 
-EXPOSE 2181 2202 4040 7860 7861 8020 8042 8080 8088 8300 8500 9083 9099 9225 10000 18080 45054 49152 49155 50070 56100 56150
+RUN yum clean all
+
+# Copy the ambari blueprint creation/installation scripts
+COPY ./scripts/* /root/
+RUN rm -f /etc/yum.repos.d/*
+RUN mv /root/ambari.repo /etc/yum.repos.d/ambari.repo
+
+RUN systemctl enable ntpd
+
+EXPOSE 2181 2202 3000 4040 6188 7860 7861 8020 8042 8080 8088 8300 8500 9083 9099 9225 10000 18080 45054 49152 49155 50070 56100 56150

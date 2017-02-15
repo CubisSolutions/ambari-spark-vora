@@ -13,7 +13,7 @@
       "name" : "host_group_2",
       "hosts" : [
         {
-          "fqdn" : "ambarim.cubis"
+          "fqdn" : "ambaria2.cubis"
         }
       ]
     },
@@ -21,7 +21,7 @@
       "name" : "host_group_4",
       "hosts" : [
         {
-          "fqdn" : "ambaria2.cubis"
+          "fqdn" : "ambaris.cubis"
         }
       ]
     },
@@ -29,7 +29,7 @@
       "name" : "host_group_3",
       "hosts" : [
         {
-          "fqdn" : "ambaris.cubis"
+          "fqdn" : "ambarim.cubis"
         }
       ]
     }    

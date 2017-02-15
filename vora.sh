@@ -79,5 +79,5 @@ wait_for_hosts() {
 init
 docker-compose $1 $2 
 wait_for_hosts
-
+docker exec ambarim.cubis /root/bootstrap.sh
 exit 0   

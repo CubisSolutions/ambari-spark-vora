@@ -10,34 +10,36 @@ services:
     environment:
       - vpnip=${vpnip}
     ports:
+      - 3000:3000
       - 4040:4040
       - 7860:7860
       - 8080:8080
-      - 8088:8088
       - 8500:8500
       - 9099:9099
       - 18080:18080
+      - 19000:19000
       - 31015:31015
       - 50070:50070
       - 56000:56000
       - 56050:56050
-    entrypoint: /root/bootstrap.sh
     dns:
       - 8.8.8.8
       - 8.8.4.4
       - 10.104.1.11
     volumes:
       - ${HOSTDATA}:/hostdata
+      - /sys/fs/cgroup:/sys/fs/cgroup
     networks:
       - nw
   ambaris:
     image: ambari_agent
     container_name: ambaris.cubis
+    privileged: true
     hostname: ambaris.cubis
     environment:
       - vpnip=${vpnip}
-    entrypoint: /root/bootstrap.sh
     ports:
+      - 9225:9225
       - 10000:10000
       - 56100:56100
       - 56150:56150
@@ -47,17 +49,18 @@ services:
       - 10.104.1.11
     volumes:
       - ${HOSTDATA}:/hostdata
+      - /sys/fs/cgroup:/sys/fs/cgroup
     networks:
       - nw
   ambaria1:
     image: ambari_agent
     container_name: ambaria1.cubis
+    privileged: true
     hostname: ambaria1.cubis
     environment:
       - vpnip=${vpnip} 
-    entrypoint: /root/bootstrap.sh
     ports:
-      - 9225:9225
+      - 8088:8088 
       - 49155:49155
     dns:
       - 8.8.8.8
@@ -65,21 +68,32 @@ services:
       - 10.104.1.11
     volumes:
       - ${HOSTDATA}:/hostdata
+      - /sys/fs/cgroup:/sys/fs/cgroup
     networks:
       - nw
   ambaria2:
     image: ambari_agent
     container_name: ambaria2.cubis
+    privileged: true
     hostname: ambaria2.cubis
     environment:
       - vpnip=${vpnip}
-    entrypoint: /root/bootstrap.sh
     dns:
       - 8.8.8.8
       - 8.8.4.4
       - 10.104.1.11
     volumes:
       - ${HOSTDATA}:/hostdata
+      - /sys/fs/cgroup:/sys/fs/cgroup
+    networks:
+      - nw
+  repo:
+    image: ambari_repo
+    container_name: repo.cubis
+    hostname: repo.cubis
+    ports:
+      - 80:80
+    entrypoint: httpd -DFOREGROUND
     networks:
       - nw
       

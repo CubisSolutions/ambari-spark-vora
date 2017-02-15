@@ -5,13 +5,27 @@ echo "$(hostname -i)" > /hostdata/$(hostname)
 # Disable Transparent Huge Pages. --priviledged
 echo never | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
 
+# Check to initialize the mysql database for ambari setup
+password="`grep 'temporary password' /var/log/mysqld.log | sed 's/.*localhost: //g'`"
+message="`mysqladmin ping -u root -p$password 2>&1 >/dev/null | grep expired`"
+if grep -qw 'expired' <<< "$message" ; then
+  mysql -u root -p$password --execute="SET PASSWORD = PASSWORD('CubisRoot_1')" --connect-expired-password
+  mysqladmin -u root -pCubisRoot_1 create ambaridb
+  mysqladmin -u root -pCubisRoot_1 create hivedb
+  mysql -u root -pCubisRoot_1 < /root/ambaridb.sql
+  mysql -u root -pCubisRoot_1 < /root/hivedb.sql
+  ambari-server setup -s --database=mysql \
+                         --java-home=/usr/java/jdk1.8.0_112/ \
+                         --databasehost=localhost \
+                         --databaseport=3306 \
+                         --databasename=ambaridb \
+                         --databaseusername=ambari \
+                         --databasepassword=Ambari_password1 
+  mysql -u ambari -pAmbari_password1 ambaridb <  /var/lib/ambari-server/resources/Ambari-DDL-MySQL-CREATE.sql
+fi
+
 # service ssh start
-service ntp start
 ambari-server start
-
-sed -i "s/hostname=localhost/hostname=ambarim.cubis/g" /etc/ambari-agent/conf/ambari-agent.ini
-
-ambari-agent start
 
 printf 'Waiting for ambari-master'
 until $(curl --output /dev/null --silent --head --fail http://localhost:8080); do
@@ -19,12 +33,14 @@ until $(curl --output /dev/null --silent --head --fail http://localhost:8080); d
   sleep 5
 done
 
+curl -u admin:admin -H "X-Requested-By: ambari" -X PUT -d '{"Repositories" : { "base_url" : "http://repo.cubis/hdp/centos7/HDP-2.4.2.0/", "verify_base_url" : true } }' http://localhost:8080/api/v1/stacks/HDP/versions/2.4/operating_systems/redhat7/repositories/HDP-2.4
+curl -u admin:admin -H "X-Requested-By: ambari" -X PUT -d '{"Repositories" : { "base_url" : "http://repo.cubis/hdp/centos7/HDP-UTILS-1.1.0.20/", "verify_base_url" : false } }' http://localhost:8080/api/v1/stacks/HDP/versions/2.4/operating_systems/redhat7/repositories/HDP-UTILS-1.1.0.20
 curl -u admin:admin -H "X-Requested-By: ambari" -X POST -d @/root/cubis1node_blueprint.json http://localhost:8080/api/v1/blueprints/cubis1node_blueprint?validate_topology=false
 curl -u admin:admin -H "X-Requested-By: ambari" -X POST -d @/root/1node_template.json http://localhost:8080/api/v1/clusters/Cubis
 
 printf '\n\nWaiting for Cubis-cluster to be up'
 while true ; do
-  message=$(curl -u admin:admin -i -s -H 'X-Requested-By: ambari' -X GET http://localhost:8080/api/v1/clusters/Cubis/requests/1 | grep progress_percent)
+  message="`curl -u admin:admin -i -s -H 'X-Requested-By: ambari' -X GET http://localhost:8080/api/v1/clusters/Cubis/requests/1 | grep progress_percent`"
   if grep -qw '100' <<< "$message" ; then
      break
   else
@@ -36,7 +52,7 @@ printf '\nDone'
 
 # variables defined in bash.bashrc not available on docker entrypoint startup
 
-export JAVA_HOME=/usr/jdk64/jdk1.8.0_60 
+export JAVA_HOME=/usr/jdk64/jdk1.8.0_112 
 export HADOOP_CONF_DIR=/etc/hadoop/conf
 export SPARK_HOME=/usr/hdp/2.3.6.0-3796/spark
 export SPARK_CONF_DIR=$SPARK_HOME/conf
@@ -47,21 +63,35 @@ export LD_LIBRARY_PATH=/usr/hdp/2.3.6.0-3796/hadoop/lib/native
 su hdfs -c "hadoop fs -mkdir /user/vora"
 su hdfs -c "hadoop fs -chown vora /user/vora"
 
-# Try to tart the zeppelin service
-sudo vora -c set
-while true ; do
-  su vora -c "/home/vora/zeppelin-0.5.6-incubating-bin-all/bin/zeppelin-daemon.sh start"
-  message=$(su vora -c "/home/vora/zeppelin-0.5.6-incubating-bin-all/bin/zeppelin-daemon.sh status" | grep running)
-  if grep -qw 'OK' <<< "$message" ; then
-     break
-  else
-     printf '.'
-     sleep 5  
-  fi
-done
-
 su vora -c "echo '1,2,Hello' > /home/vora/test.csv"
 su vora -c "hadoop fs -put /home/vora/test.csv"
+
+# Create vora manager user and password file
+	cd /var/lib/ambari-server/resources/stacks/HDP/2.4/services
+./genpasswd.sh --vora-username=voraadmin --vora-password=voraadmin --vora-password-file-path=/etc/vora/datatools/
+chown vora /etc/vora/datatools/htpasswd
+cp /etc/vora/datatools/htpasswd /etc/vora/manager/
+chown vora /etc/vora/manager/htpasswd
+
+curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart Vora Master"}, "Requests/resource_filters":[ {"service_name": "HANA_VORA_MANAGER", "component_name": "HANA_VORA_MANAGER_MASTER", "hosts": "ambarim.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
+
+curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart Vora Master"}, "Requests/resource_filters":[ {"service_name": "HANA_VORA_MANAGER", "component_name": "HANA_VORA_MANAGER_WORKER", "hosts": "ambarim.cubis, ambaris.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
+
+# Setup zeppeling to run VORA 1.3
+export ZEPPELIN_HOME=/root/zeppelin-0.6.2-bin-all
+cp /var/lib/ambari-agent/cache/stacks/HDP/2.4/services/vora-manager/package/lib/vora-spark/zeppelin/zeppelin-*.jar $ZEPPELIN_HOME/interpreter/spark/
+jar xf $ZEPPELIN_HOME/interpreter/spark/zeppelin-1*.jar interpreter-setting.json
+jar uf $ZEPPELIN_HOME/interpreter/spark/zeppelin-spark_*.jar interpreter-setting.json
+
+rm interpreter-setting.json
+cp $ZEPPELIN_HOME/conf/zeppelin-env.sh.template $ZEPPELIN_HOME/conf/zeppelin-env.sh
+chmod 755 $ZEPPELIN_HOME/conf/zeppelin-env.sh
+echo "export MASTER=yarn-client" >> $ZEPPELIN_HOME/conf/zeppelin-env.sh
+echo "export HADOOP_CONF_DIR=/etc/hadoop/conf" >> $ZEPPELIN_HOME/conf/zeppelin-env.sh
+cp $ZEPPELIN_HOME/conf/zeppelin-site.xml.template $ZEPPELIN_HOME/conf/zeppelin-site.xml
+chmod 755 $ZEPPELIN_HOME/conf/zeppelin-site.xml
+sed -i "s/org.apache.zeppelin.spark.SparkInterpreter,/org.apache.zeppelin.spark.SparkInterpreter,sap.zeppelin.spark.SapSqlInterpreter,/" $ZEPPELIN_HOME/conf/zeppelin-site.xml
+sed -i "s/<value>8080/<value>9099/" $ZEPPELIN_HOME/conf/zeppelin-site.xml
 
 # mv /root/SHA_create_employee_table.sql /home/hive/
 # mv /root/SHA_Employee.dat /home/hive
@@ -71,10 +101,7 @@ su vora -c "hadoop fs -put /home/vora/test.csv"
 # su hive -c "hive -f /home/hive/SHA_create_employee_table.sql"
 # su hive -c "hdfs dfs -put /home/hive/SHA_Employee.dat /apps/hive/warehouse/sha.db/employee"
 
-# cp spark-sap-datasource...jar to spark controller library
-cp /var/lib/ambari-server/resources/stacks/HDP/2.3/services/vora-base/package/lib/vora-spark/lib/spark-sap-datasources-1.2.33-assembly.jar /usr/sap/spark/controller/lib/
-cp /root/DockerResolver.jar /usr/sap/spark/controller/lib/
-chown hanaes:sapsys /usr/sap/spark/controller/lib/* 
+
 
 # Copy spark Controller jars to hdfs
 # su hdfs -c "hdfs dfs -mkdir -p /sap/hana/spark/libs/thirdparty"
@@ -84,17 +111,3 @@ chown hanaes:sapsys /usr/sap/spark/controller/lib/*
 # su hdfs -c "hdfs dfs -put -p $SPARK_HOME/lib/datanucleus-rdbms-3.2.9.jar /sap/hana/spark/libs/thridparty"
 # su hdfs -c "hdfs dfs -put -p /usr/sap/spark/controller/lib.jar /sap/hana/spark/libs/thridparty"
 
-# restart discovery services, vora thriftserver and spark controller, they fail after initial start even if they show OK in ambari managment console
-curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart Vora Discovery Server"}, "Requests/resource_filters":[ {"service_name": "HANA_VORA_DISCOVERY", "component_name": "HANA_VORA_DISCOVERY_SERVER", "hosts": "ambarim.cubis, ambaria2.cubis, ambaris.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
-
-sleep 5
-
-curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart Vora Discovery Client"}, "Requests/resource_filters":[ {"service_name": "HANA_VORA_DISCOVERY", "component_name": "HANA_VORA_DISCOVERY_CLIENT", "hosts": "ambaria1.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
-
-curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart SparkController"}, "Requests/resource_filters":[ {"service_name": "SparkController", "component_name": "SparkController", "hosts": "ambarim.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
-
-curl -uadmin:admin -H 'X-Requested-By: ambari' -X POST -d '{ "RequestInfo": {"command":"RESTART", "context":"Restart Vora ThriftServer"}, "Requests/resource_filters":[ {"service_name": "HANA_VORA_THRIFTSERVER", "component_name": "HANA_VORA_THRIFTSERVER_MASTER", "hosts": "ambaria1.cubis"} ] }' http://localhost:8080/api/v1/clusters/Cubis/requests
-
-while true ; do
-   sleep 100000
-done
