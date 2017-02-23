@@ -12,11 +12,6 @@ RUN wget https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm &&
     rpm -ivh mysql57-community-release-el7-9.noarch.rpm && \
     yum -y install mysql-server
 
-
-# Copy startup script into the docker image
-COPY bootstrap.sh /root/bootstrap.sh
-RUN chmod +x /root/bootstrap.sh
-
 # Copy the ambari blueprint creation/installation scripts
 COPY ./scripts/* /root/
 RUN rm -f /etc/yum.repos.d/*
@@ -39,18 +34,23 @@ RUN tar -xzvf /root/VORA_AM.TGZ -C /var/lib/ambari-server/resources/stacks/HDP/2
 # Zeppelin
 RUN wget http://archive.apache.org/dist/zeppelin/zeppelin-0.6.2/zeppelin-0.6.2-bin-all.tgz -O /root/ZEPPELIN.TGZ
 RUN tar -xzvf /root/ZEPPELIN.TGZ -C /root
+COPY ./scripts/interpreter.json /root/interpreter.json
 
 RUN rm /root/*.TGZ
 
 USER root
 
+# Copy startup script into the docker image
+COPY bootstrap.sh /root/bootstrap.sh
+RUN chmod +x /root/bootstrap.sh
+
 RUN echo 'export ZEPPELIN_HOME=/root/zeppelin-0.6.2-bin-all' >> /etc/bashrc && \
-    echo 'export JAVA_HOME=/usr/jdk64/jdk1.8.0_60' >> /etc/bash.bashrc && \
-    echo 'export HADOOP_CONF_DIR=/etc/hadoop/conf' >> /etc/bash.bashrc && \
+    echo 'export JAVA_HOME=/usr/java/jdk1.8.0_112' >> /etc/bashrc && \
+    echo 'export HADOOP_CONF_DIR=/etc/hadoop/conf' >> /etc/bashrc && \
     echo 'export SPARK_HOME=/usr/hdp/2.4.2.0-258/spark' >> /etc/bashrc && \
-    echo 'export SPARK_CONF_DIR=$SPARK_HOME/conf' >> /etc/bash.bashrc && \
+    echo 'export SPARK_CONF_DIR=$SPARK_HOME/conf' >> /etc/bashrc && \
     echo 'export SPARK_VORA_HOME=/var/lib/ambari-agent/cache/stacks/HDP/2.4/services/vora-manager/package/lib/vora-spark/bin' >> /etc/bashrc && \
-    echo 'export PATH=$PATH:$SPARK_HOME/bin' >> /etc/bash.bashrc
+    echo 'export PATH=$PATH:$SPARK_HOME/bin' >> /etc/bashrc
 
 RUN yum clean all
 

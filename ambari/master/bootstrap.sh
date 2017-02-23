@@ -52,22 +52,24 @@ printf '\nDone'
 
 # variables defined in bash.bashrc not available on docker entrypoint startup
 
-export JAVA_HOME=/usr/jdk64/jdk1.8.0_112 
+export JAVA_HOME=/usr/java/jdk1.8.0_112 
 export HADOOP_CONF_DIR=/etc/hadoop/conf
-export SPARK_HOME=/usr/hdp/2.3.6.0-3796/spark
+export SPARK_HOME=/usr/hdp/2.4.2.0-258/spark
 export SPARK_CONF_DIR=$SPARK_HOME/conf
 export PATH=$PATH:$SPARK_HOME/bin 
-export LD_LIBRARY_PATH=/usr/hdp/2.3.6.0-3796/hadoop/lib/native 
+export LD_LIBRARY_PATH=/usr/hdp/2.4.2.0-258/hadoop/lib/native 
  
-# Prepare HDFS for vora
-su hdfs -c "hadoop fs -mkdir /user/vora"
-su hdfs -c "hadoop fs -chown vora /user/vora"
+# Prepare HDFS for zeppelin
+su hdfs -c "hadoop fs -mkdir /user/root"
+su hdfs -c "hadoop fs -chown root /user/root"
+su hdfs -c "hadoop fs -mkdir /user/flume"
+su hdfs -c "hadoop fs -chown flume /user/flume"
 
-su vora -c "echo '1,2,Hello' > /home/vora/test.csv"
-su vora -c "hadoop fs -put /home/vora/test.csv"
+echo '1,2,Hello' > /root/test.csv
+hadoop fs -put /root/test.csv
 
 # Create vora manager user and password file
-	cd /var/lib/ambari-server/resources/stacks/HDP/2.4/services
+cd /var/lib/ambari-server/resources/stacks/HDP/2.4/services
 ./genpasswd.sh --vora-username=voraadmin --vora-password=voraadmin --vora-password-file-path=/etc/vora/datatools/
 chown vora /etc/vora/datatools/htpasswd
 cp /etc/vora/datatools/htpasswd /etc/vora/manager/
@@ -92,6 +94,9 @@ cp $ZEPPELIN_HOME/conf/zeppelin-site.xml.template $ZEPPELIN_HOME/conf/zeppelin-s
 chmod 755 $ZEPPELIN_HOME/conf/zeppelin-site.xml
 sed -i "s/org.apache.zeppelin.spark.SparkInterpreter,/org.apache.zeppelin.spark.SparkInterpreter,sap.zeppelin.spark.SapSqlInterpreter,/" $ZEPPELIN_HOME/conf/zeppelin-site.xml
 sed -i "s/<value>8080/<value>9099/" $ZEPPELIN_HOME/conf/zeppelin-site.xml
+$ZEPPELIN_HOME/bin/zeppelin-daemon.sh start
+cp /root/interpreter.json $ZEPPELIN_HOME/conf/interpreter.json
+$ZEPPELIN_HOME/bin/zeppelin-daemon.sh restart
 
 # mv /root/SHA_create_employee_table.sql /home/hive/
 # mv /root/SHA_Employee.dat /home/hive
