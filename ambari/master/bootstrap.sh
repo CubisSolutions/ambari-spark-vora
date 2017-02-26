@@ -1,6 +1,6 @@
 #!/bin/bash
 # Inform host about ip adress
-echo "$(hostname -i)" > /hostdata/$(hostname)
+echo "$(hostname -i)" > /hostdata/$(hostname -f)
 
 # Disable Transparent Huge Pages. --priviledged
 echo never | sudo tee /sys/kernel/mm/transparent_hugepage/enabled

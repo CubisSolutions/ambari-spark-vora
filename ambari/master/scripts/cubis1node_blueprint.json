@@ -359,6 +359,25 @@
       }
     },
     {
+      "hanaes-site" : {
+        "properties_attributes" : { },
+        "properties" : {
+          "spark.executor.memory" : "3g",
+          "sap.hana.es.spark.yarn.jar" : "file:///usr/sap/spark/controller/lib/external/spark-assembly-1.5.2-hadoop2.6.0.jar",
+          "sap.hana.hadoop.datastore" : "spark",
+          "spark.dynamicAllocation.maxExecutors" : "20",
+          "spark.dynamicAllocation.minExecutors" : "10",
+          "spark.shuffle.service.enabled" : "false",
+          "sap.hana.es.ssl.clientauth.required" : "true",
+          "sap.hana.es.ssl.verify.hostname" : "true",
+          "spark.executor.instances" : "10",
+          "sap.hana.es.server.port" : "7860",
+          "sap.hana.es.ssl.enabled" : "false",
+          "spark.dynamicAllocation.enabled" : "false"
+        }
+      }
+    },
+    {
       "yarn-site" : {
         "properties_attributes" : { },
         "properties" : {
@@ -1538,9 +1557,6 @@
           "name" : "HANA_VORA_MANAGER_WORKER"
         },
         {
-          "name" : "SPARK_THRIFTSERVER"
-        },
-        {
           "name" : "APP_TIMELINE_SERVER"
         },
         {
@@ -1581,11 +1597,14 @@
           "name" : "METRICS_MONITOR"
         },
         {
-          "name" : "NFS_GATEWAY"
+          "name" : "NFS_GATEWAY" 
         },
         {
-          "name" : "NAMENODE"
+          "name" : "SparkController"
         },
+        { 
+          "name" : "NAMENODE"
+        }, 
         {
           "name" : "TEZ_CLIENT"
         },

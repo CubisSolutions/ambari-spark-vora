@@ -78,6 +78,13 @@ wait_for_hosts() {
 # Main
 init
 docker-compose $1 $2 
-wait_for_hosts
-docker exec ambarim.cubis /root/bootstrap.sh
+sleep 30
+if [ "$1" != "down" ]
+then
+   docker exec ambarim.cubis /root/bootstrap.sh
+   docker exec ambaris.cubis /root/bootstrap.sh
+   docker exec ambaria1.cubis /root/bootstrap.sh
+   docker exec ambaria2.cubis /root/bootstrap.sh	
+   wait_for_hosts
+fi
 exit 0   

@@ -1,6 +1,6 @@
 #!/bin/bash
 # inform host about ip adress
-echo "$(hostname -i)" > /hostdata/$(hostname)
+echo "$(hostname -i)" > /hostdata/$(hostname -f)
 
 chown vora /etc/vora/datatools/htpasswd
 
